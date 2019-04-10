@@ -10,11 +10,14 @@ package playground // import "golang.org/x/tools/playground"
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
-	"log"
+	"io/ioutil"
 	"net/http"
+	"net/url"
 	"os"
+	"os/exec"
 	"strings"
 	"time"
 
@@ -28,18 +31,74 @@ func init() {
 	http.HandleFunc("/share", bounce)
 }
 
+type PlayEvent struct {
+	Message string
+	Kind string
+	Delay int
+}
+
+type PlayResp struct {
+	Errors string
+	Events []PlayEvent
+	Status int
+	IsTest bool
+	TestsFailed int
+}
+
 func bounce(w http.ResponseWriter, r *http.Request) {
 	b := new(bytes.Buffer)
-	if err := passThru(b, r); os.IsPermission(err) {
-		http.Error(w, "403 Forbidden", http.StatusForbidden)
-		log.Println(err)
-		return
-	} else if err != nil {
-		http.Error(w, "500 Internal Server Error", http.StatusInternalServerError)
-		log.Println(err)
+	b.ReadFrom(r.Body)
+	s := b.String()[len("version=2&body="):]
+	s, err := url.QueryUnescape(s)
+	if err != nil {
+		fmt.Println(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	io.Copy(w, b)
+	fmt.Println(s)
+	f, err := ioutil.TempFile("", "*.go")
+	if err != nil {
+		fmt.Println(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	fmt.Println("create temp file:", f.Name())
+	f.WriteString(s)
+	f.Close()
+	defer os.Remove(f.Name())
+
+	out := new(bytes.Buffer)
+	cmd := exec.Command("go", "run", f.Name())
+	//cmd.
+	cmd.Stdout = out
+	cmd.Stderr = out
+	err = cmd.Run()
+	strOut := out.String()
+	if err != nil {
+		fmt.Println(err, strOut)
+		http.Error(w, err.Error() + ":" + strOut, http.StatusInternalServerError)
+		return
+	}
+
+	resp := PlayResp{
+		Events: []PlayEvent{
+			{
+				Message: out.String(),
+				Kind: "stdout",
+			},
+		},
+	}
+	json.NewEncoder(w).Encode(resp)
+	//if err := passThru(b, r); os.IsPermission(err) {
+	//	http.Error(w, "403 Forbidden", http.StatusForbidden)
+	//	log.Println(err)
+	//	return
+	//} else if err != nil {
+	//	http.Error(w, "500 Internal Server Error", http.StatusInternalServerError)
+	//	log.Println(err)
+	//	return
+	//}
+	//io.Copy(w, b)
 }
 
 func passThru(w io.Writer, req *http.Request) error {
