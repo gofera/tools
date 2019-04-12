@@ -113,18 +113,14 @@ and code is licensed under a <a href="http://golang.org/LICENSE">BSD license</a>
   })();
   $("#git_pull").click(function() {
     var path = {{.Path}};
-    alert(path);
     $.ajax('/ppt/gitpull', {
-    				type: 'POST',
-    				data: {'path': path},
-    				dataType: 'json',
-    				success: function(data) {
-    				  alert( "updated" );
-    				},
-    				error: function() {
-    					alert( "fail to update" );
-    				}
-    			});
+        type: 'POST',
+        data: path,
+        dataType: 'json',
+        success: function(data) {
+          alert( data );
+        }
+    });
   });
 </script>
 </body>

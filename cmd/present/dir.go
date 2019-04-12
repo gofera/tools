@@ -83,12 +83,6 @@ func userRepository(name string) (repoPath, dir string) {
 }
 
 func sync(name string) error {
-	const prefix = "sync/"
-	forcePull := false
-	if strings.HasPrefix(name, prefix) {
-		name = name[len(prefix):]
-		forcePull = true
-	}
 	repo, dir := userRepository(name)
 	if repo == "" {
 		return nil
@@ -103,9 +97,6 @@ func sync(name string) error {
 	if !fi.IsDir() {
 		return fmt.Errorf(name, "exists but not dir")
 	}
-	if forcePull {
-		return gitPull(dir)
-	}
 	return nil
 }
 
@@ -119,16 +110,6 @@ func gitClone(repo, dirPath string) error {
 	cmd := exec.Command("git", "clone", repo, name)
 	cmd.Dir = dir
 	log.Println("cd", dir)
-	log.Println(cmd.Args)
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	return cmd.Run()
-}
-
-func gitPull(dirPath string) error {
-	cmd := exec.Command("git", "pull")
-	cmd.Dir = dirPath
-	log.Println("cd", dirPath)
 	log.Println(cmd.Args)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr

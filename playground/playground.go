@@ -14,6 +14,7 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"net/url"
 	"os"
@@ -29,6 +30,7 @@ const baseURL = "https://play.golang.org"
 func init() {
 	http.HandleFunc("/compile", bounce)
 	http.HandleFunc("/share", bounce)
+	http.HandleFunc("/gitpull", handleGitPull)
 }
 
 type PlayEvent struct {
@@ -51,18 +53,17 @@ func bounce(w http.ResponseWriter, r *http.Request) {
 	s := b.String()[len("version=2&body="):]
 	s, err := url.QueryUnescape(s)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	fmt.Println(s)
 	f, err := ioutil.TempFile("", "*.go")
 	if err != nil {
 		fmt.Println(err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	fmt.Println("create temp file:", f.Name())
+	log.Println("create temp file:", f.Name())
 	f.WriteString(s)
 	f.Close()
 	defer os.Remove(f.Name())
@@ -99,6 +100,70 @@ func bounce(w http.ResponseWriter, r *http.Request) {
 	//	return
 	//}
 	//io.Copy(w, b)
+}
+
+func gitPull(dirPath string, w io.Writer) error {
+	cmd := exec.Command("git", "pull")
+	cmd.Dir = dirPath
+	// w.Write([]byte("cd "))
+	// w.Write([]byte(dirPath))
+	// w.Write([]byte("\ngit pull\n"))
+	log.Println("cd", dirPath)
+	log.Println(cmd.Args)
+	cmd.Stdout = w
+	// cmd.Stderr = os.Stderr
+	return cmd.Run()
+}
+
+// users/weliu/repos/go_talks/browse
+func getRepo(req string) string {
+	req = strings.Trim(req, "/")
+	const repo = "users/"
+	if !strings.HasPrefix(req, repo) {
+		return ""
+	}
+	cnt := 1
+	var i int
+	for i = len(repo); i < len(req); i++ {
+		if req[i] == '/' {
+			cnt++
+			if cnt == 4 {
+				break
+			}
+		}
+	}
+	switch cnt {
+	case 3:
+		return req + "/browse"
+	case 4:
+		return req[:i] + "/browse"
+	default:
+		return ""
+	}
+}
+
+func handleGitPull(w http.ResponseWriter, r *http.Request) {
+	b := new(bytes.Buffer)
+	b.ReadFrom(r.Body)
+	s, err := url.QueryUnescape(b.String())
+	if err != nil {
+		log.Println(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	dir := getRepo(s)
+	if dir == "" {
+		return
+	}
+	o := new(bytes.Buffer)
+	err = gitPull(dir, o)
+	out := o.String()
+	if err != nil {
+		log.Println(err, o)
+		http.Error(w, err.Error() + "\n" + out, http.StatusInternalServerError)
+		return
+	}
+	json.NewEncoder(w).Encode(out)
 }
 
 func passThru(w io.Writer, req *http.Request) error {
