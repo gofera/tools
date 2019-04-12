@@ -6,6 +6,7 @@
   <title>Talks - The Go Programming Language</title>
   <link type="text/css" rel="stylesheet" href="/ppt/static/dir.css">
   <script src="/ppt/static/dir.js"></script>
+  <script src="/ppt/static/jquery.js"></script>
   <script>
     // Initialize Google Analytics tracking code on production site only.
     if (window["location"] && window["location"]["hostname"] == "talks.golang.org") {
@@ -37,7 +38,13 @@
 <a href="http://golang.org/help/">Help</a>
 <input type="text" id="search" name="q" class="inactive" value="Search">
 </div>
-<div id="heading"><a href="/">The Go Programming Language</a></div>
+<div id="heading">
+  <button id="git_pull" type="button" style="
+    font-size: x-large;
+    color: red;
+    font-weight: bold;
+  ">git pull</button>
+</div>
 </form>
 
 </div></div>
@@ -104,6 +111,21 @@ and code is licensed under a <a href="http://golang.org/LICENSE">BSD license</a>
       var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(ga, s);
     }
   })();
+  $("#git_pull").click(function() {
+    var path = {{.Path}};
+    alert(path);
+    $.ajax('/ppt/gitpull', {
+    				type: 'POST',
+    				data: {'path': path},
+    				dataType: 'json',
+    				success: function(data) {
+    				  alert( "updated" );
+    				},
+    				error: function() {
+    					alert( "fail to update" );
+    				}
+    			});
+  });
 </script>
 </body>
 </html>

@@ -47,32 +47,76 @@ func repository(name string) string {
 	return name[:i]
 }
 
+func userRepository(name string) (repoPath, dir string) {
+	const repo = "users/"
+	if !strings.HasPrefix(name, repo) {
+		return
+	}
+	name = strings.TrimRight(name, "/")
+	var user, repoName string
+	cnt := 1
+	var i, last int
+	for i = len(repo); i < len(name); i++ {
+		if name[i] == '/' {
+			switch cnt {
+			case 1:
+				user = name[len(repo):i]
+			case 3:
+				repoName = name[last+1:i]
+			}
+			if cnt == 1 {
+				user = name[len(repo):i]
+			}
+			cnt++
+			last = i
+			if cnt == 4 {
+				break
+			}
+		}
+	}
+	if repoName == "" {
+		return
+	}
+	repoPath = fmt.Sprintf("https://git-brion-us.asml.com:8443/scm/~%s/%s.git", user, repoName)
+	dir = name[:i] + "/browse"
+	return
+}
+
 func sync(name string) error {
-	repo := repository(name)
+	const prefix = "sync/"
+	forcePull := false
+	if strings.HasPrefix(name, prefix) {
+		name = name[len(prefix):]
+		forcePull = true
+	}
+	repo, dir := userRepository(name)
 	if repo == "" {
 		return nil
 	}
-	fi, err := os.Stat(repo)
+	fi, err := os.Stat(dir)
 	if err != nil {
 		if os.IsNotExist(err) {
-			return gitClone(repo)
+			return gitClone(repo, dir)
 		}
 		return err
 	}
 	if !fi.IsDir() {
 		return fmt.Errorf(name, "exists but not dir")
 	}
-	return gitPull(repo)
+	if forcePull {
+		return gitPull(dir)
+	}
+	return nil
 }
 
-func gitClone(repo string) error {
-	dir := path.Dir(repo)
+func gitClone(repo, dirPath string) error {
+	dir, name := path.Split(dirPath)
 	log.Println("mkdir -p", dir)
 	err := os.MkdirAll(dir, 0755)
 	if err != nil {
 		return err
 	}
-	cmd := exec.Command("git", "clone", fmt.Sprintf("https://%s.git", repo))
+	cmd := exec.Command("git", "clone", repo, name)
 	cmd.Dir = dir
 	log.Println("cd", dir)
 	log.Println(cmd.Args)
@@ -81,10 +125,10 @@ func gitClone(repo string) error {
 	return cmd.Run()
 }
 
-func gitPull(repo string) error {
+func gitPull(dirPath string) error {
 	cmd := exec.Command("git", "pull")
-	cmd.Dir = repo
-	log.Println("cd", repo)
+	cmd.Dir = dirPath
+	log.Println("cd", dirPath)
 	log.Println(cmd.Args)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
@@ -101,6 +145,7 @@ func dirHandler(w http.ResponseWriter, r *http.Request) {
 	if err := sync(name); err != nil {
 		log.Println(err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 	if isDoc(name) {
 		err := renderDoc(w, name)
