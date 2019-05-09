@@ -5,6 +5,7 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"html/template"
 	"io"
@@ -103,11 +104,13 @@ func dirHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 	if isDoc(name) {
-		err := renderDoc(w, name)
+		bf := bytes.Buffer{}
+		err := renderDoc(&bf, name)
 		if err != nil {
 			log.Println(err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
+		renderAgendas(w, bf.Bytes())
 		return
 	}
 	if isDir, err := dirList(w, name); err != nil {
