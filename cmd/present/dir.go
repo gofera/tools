@@ -124,12 +124,12 @@ func dirHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	name := filepath.Join(*contentPath, r.URL.Path)
-	if err := sync(name); err != nil {
-		log.Println(err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
 	if isDoc(name) {
+		if err := sync(name); err != nil {
+			log.Println(err)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 		bf := bytes.Buffer{}
 		err := renderDoc(&bf, name)
 		if err != nil {

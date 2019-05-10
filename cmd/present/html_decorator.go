@@ -87,7 +87,7 @@ func renderAgenda(w io.Writer, rs []Agenda, index int) {
 	for i, r := range rs {
 		w.Write([]byte("  <li>"))
 		if i == index {
-			fmt.Fprintf(w, `<span style="color:deeppink">%s</span>`, r.Content)
+			fmt.Fprintf(w, `<b style="color:deeppink">%s</b>`, r.Content)
 		} else {
 			fmt.Fprintf(w, `<a href="javascript:void(0);" onclick="openSlide(%d)">%s</a>`, r.PageNum, r.Content)
 		}
