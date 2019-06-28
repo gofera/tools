@@ -57,7 +57,50 @@ func bounce(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	f, err := ioutil.TempFile("", "*.go")
+	s = strings.TrimSpace(s)
+	bin := "go"
+	ext := "go"
+	args := make([]string, 0, 4)
+	const scriptPrefix = "#!"
+	if strings.HasPrefix(s, scriptPrefix) {
+		lineEnd := strings.IndexAny(s, "\r\n")
+		if lineEnd == -1 {
+			http.Error(w, "No code to run except #!", http.StatusBadRequest)
+			return
+		}
+		bins := strings.Split(s[len(scriptPrefix):lineEnd], " ")
+		bin = strings.TrimSpace(bins[0])
+		if bin == "" {
+			http.Error(w, "No code to run except #!", http.StatusBadRequest)
+			return
+		}
+		for i := 1; i < len(bins); i++ {
+			arg := strings.TrimSpace(bins[i])
+			if arg != "" {
+				args = append(args, arg)
+			}
+		}
+
+		s = s[lineEnd+1:]
+
+		switch {
+		case strings.Contains(bin, "python"):
+			ext = "py"
+		case strings.Contains(bin, "bash"):
+			ext = "sh"
+		case strings.Contains(bin, "perl"):
+			ext = "pl"
+		case strings.Contains(bin, "lua"):
+			ext = "lua"
+		case strings.Contains(bin, "groovy"):
+			ext = "groovy"
+		case strings.Contains(bin, "sh"):
+			ext = "sh"
+		}
+	} else {
+		args = append(args, "run")  // go run
+	}
+	f, err := ioutil.TempFile("", "*." + ext)
 	if err != nil {
 		fmt.Println(err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -68,9 +111,10 @@ func bounce(w http.ResponseWriter, r *http.Request) {
 	f.Close()
 	defer os.Remove(f.Name())
 
+	args = append(args, f.Name())
+
 	out := new(bytes.Buffer)
-	cmd := exec.Command("go", "run", f.Name())
-	//cmd.
+	cmd := exec.Command(bin, args...)
 	cmd.Stdout = out
 	cmd.Stderr = out
 	err = cmd.Run()
@@ -90,16 +134,6 @@ func bounce(w http.ResponseWriter, r *http.Request) {
 		},
 	}
 	json.NewEncoder(w).Encode(resp)
-	//if err := passThru(b, r); os.IsPermission(err) {
-	//	http.Error(w, "403 Forbidden", http.StatusForbidden)
-	//	log.Println(err)
-	//	return
-	//} else if err != nil {
-	//	http.Error(w, "500 Internal Server Error", http.StatusInternalServerError)
-	//	log.Println(err)
-	//	return
-	//}
-	//io.Copy(w, b)
 }
 
 func gitPull(dirPath string, w io.Writer) error {

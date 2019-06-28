@@ -77,13 +77,25 @@ func initPlayground(basepath string, origin *url.URL) {
 	http.Handle("/socket", socket.NewHandler(origin))
 }
 
+var supportedExts map[string]bool
+
+func init() {
+	supportedExts = map[string]bool{
+		".go":     true,
+		".sh":     true,
+		".py":     true,
+		".pl":     true,
+		".lua":    true,
+		".groovy": true,
+	}
+}
+
 func playable(c present.Code) bool {
 	play := present.PlayEnabled && c.Play
 
-	// Restrict playable files to only Go source files when using play.golang.org,
-	// since there is no method to execute shell scripts there.
+	// Restrict playable files to the map keys of supportedExts.
 	if *usePlayground {
-		return play && c.Ext == ".go"
+		return play && supportedExts[c.Ext]
 	}
 	return play
 }
