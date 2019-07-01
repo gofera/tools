@@ -27,7 +27,6 @@ var (
 	contentPath   = flag.String("content", ".", "base path for presentation content")
 	usePlayground = flag.Bool("use_playground", false, "run code snippets using play.golang.org; if false, run them locally and deliver results by WebSocket transport")
 	nativeClient  = flag.Bool("nacl", false, "use Native Client environment playground (prevents non-Go code execution) when using local WebSocket transport")
-	urlBase       = "ppt"  // hard code, should deploy to https://tramweb/ppt, now not support config: flag.String("url_base", "ppt", "url base")
 )
 
 func main() {

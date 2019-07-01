@@ -115,7 +115,7 @@ function HTTPTransport(enableVet) {
 			seq++;
 			var cur = seq;
 			var playing;
-			$.ajax('/ppt/compile', {
+			$.ajax('/compile', {
 				type: 'POST',
 				data: {'version': 2, 'body': body},
 				dataType: 'json',
@@ -138,7 +138,7 @@ function HTTPTransport(enableVet) {
 						return;
 					}
 
-					$.ajax("/ppt/vet", {
+					$.ajax("/vet", {
 						data: {"body": body},
 						type: "POST",
 						dataType: "json",
@@ -440,7 +440,7 @@ function PlaygroundOutput(el) {
       if ($(opts.fmtImportEl).is(":checked")) {
         data["imports"] = "true";
       }
-      $.ajax("/ppt/fmt", {
+      $.ajax("/fmt", {
         data: data,
         type: "POST",
         dataType: "json",
@@ -465,7 +465,7 @@ function PlaygroundOutput(el) {
       sharing = true;
 
       var sharingData = body();
-      $.ajax("/ppt/share", {
+      $.ajax("/share", {
         processData: false,
         data: sharingData,
         type: "POST",
@@ -515,7 +515,7 @@ function PlaygroundOutput(el) {
     if (opts.toysEl !== null) {
       $(opts.toysEl).bind('change', function() {
         var toy = $(this).val();
-        $.ajax("/ppt/doc/play/"+toy, {
+        $.ajax("/doc/play/"+toy, {
           processData: false,
           type: "GET",
           complete: function(xhr) {
