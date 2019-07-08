@@ -40,6 +40,7 @@ type Code struct {
 	FileName string // file name
 	Ext      string // file extension
 	Raw      []byte // content of the file
+	Style    template.HTMLAttr
 }
 
 func (c Code) TemplateName() string { return "code" }
@@ -50,7 +51,7 @@ func (c Code) TemplateName() string { return "code" }
 var (
 	highlightRE = regexp.MustCompile(`\s+HL([a-zA-Z0-9_]+)?$`)
 	hlCommentRE = regexp.MustCompile(`(.+) // HL(.*)$`)
-	codeRE      = regexp.MustCompile(`\.(code|play)\s+((?:(?:-edit|-numbers)\s+)*)([^\s]+)(?:\s+(.*))?$`)
+	codeRE      = regexp.MustCompile(`\.(code|play)\s+((?:(?:-edit|-numbers|-style=(?:[^\s]+))\s+)*)([^\s]+)(?:\s+(.*))?$`)
 )
 
 // parseCode parses a code present directive. Its syntax:
@@ -73,7 +74,7 @@ func parseCode(ctx *Context, sourceFile string, sourceLine int, cmd string) (Ele
 	// Arguments:
 	// args[0]: whole match
 	// args[1]:  .code/.play
-	// args[2]: flags ("-edit -numbers")
+	// args[2]: flags ("-edit -numbers -style=overflow:scroll;height:90%")
 	// args[3]: file name
 	// args[4]: optional address
 	args := codeRE.FindStringSubmatch(cmd)
@@ -117,6 +118,17 @@ func parseCode(ctx *Context, sourceFile string, sourceLine int, cmd string) (Ele
 		Edit:    strings.Contains(flags, "-edit"),
 		Numbers: strings.Contains(flags, "-numbers"),
 	}
+	const STYLE = "-style="
+	style := ""
+	i := strings.Index(flags, STYLE)
+	if i != -1 {
+		style = flags[i+len(STYLE):]
+		n := strings.Index(style, " ")
+		if n != -1 {
+			style = style[:n]
+		}
+		style = fmt.Sprintf(`style="%s"`, style)
+	}
 
 	// Include before and after in a hidden span for playground code.
 	if play {
@@ -135,6 +147,7 @@ func parseCode(ctx *Context, sourceFile string, sourceLine int, cmd string) (Ele
 		FileName: filepath.Base(filename),
 		Ext:      filepath.Ext(filename),
 		Raw:      rawCode(lines),
+		Style:    template.HTMLAttr(style),
 	}, nil
 }
 
