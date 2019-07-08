@@ -4,11 +4,12 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link rel="icon" href="/static/favicon.ico">
+    <link rel="icon" href="{{.UrlPrefix}}/static/favicon.ico">
     <title>{{.Title}}</title>
-    <link type="text/css" rel="stylesheet" href="/static/article.css">
+    <link type="text/css" rel="stylesheet" href="{{.UrlPrefix}}/static/article.css">
     <meta charset='utf-8'>
     <script>
+      var urlPrefix = {{.UrlPrefix}};
       // Initialize Google Analytics tracking code on production site only.
       if (window["location"] && window["location"]["hostname"] == "talks.golang.org") {
         var _gaq = _gaq || [];
@@ -59,7 +60,7 @@
     </div>
 
     {{if .PlayEnabled}}
-    <script src='/play.js'></script>
+    <script src='{{.UrlPrefix}}/play.js'></script>
     {{end}}
 
     <script>

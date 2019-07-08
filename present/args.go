@@ -11,6 +11,8 @@ import (
 	"unicode/utf8"
 )
 
+var UrlPrefix string
+
 // This file is stolen from go/src/cmd/godoc/codewalk.go.
 // It's an evaluator for the file address syntax implemented by acme and sam,
 // but using Go-native regular expressions.

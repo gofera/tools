@@ -115,7 +115,7 @@ function HTTPTransport(enableVet) {
 			seq++;
 			var cur = seq;
 			var playing;
-			$.ajax('/compile', {
+			$.ajax(urlPrefix + '/compile', {
 				type: 'POST',
 				data: {'version': 2, 'body': body},
 				dataType: 'json',

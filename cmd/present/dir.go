@@ -242,7 +242,7 @@ func dirList(w io.Writer, name string) (isDir bool, err error) {
 	}
 	strippedPath := strings.TrimPrefix(name, filepath.Clean(*contentPath))
 	strippedPath = strings.TrimPrefix(strippedPath, "/")
-	d := &dirListData{Path: strippedPath}
+	d := &dirListData{Path: strippedPath, UrlPrefix: *urlPrefix}
 	for _, fi := range fis {
 		// skip the golang.org directory
 		if name == "." && fi.Name() == "golang.org" {
@@ -250,7 +250,7 @@ func dirList(w io.Writer, name string) (isDir bool, err error) {
 		}
 		e := dirEntry{
 			Name: fi.Name(),
-			Path: filepath.ToSlash(filepath.Join(strippedPath, fi.Name())),
+			Path: filepath.ToSlash(filepath.Join(*urlPrefix, strippedPath, fi.Name())),
 		}
 		if fi.IsDir() && showDir(e.Name) {
 			d.Dirs = append(d.Dirs, e)
@@ -306,6 +306,7 @@ func showDir(n string) bool {
 type dirListData struct {
 	Path                          string
 	Dirs, Slides, Articles, Other dirEntrySlice
+	UrlPrefix string
 }
 
 type dirEntry struct {

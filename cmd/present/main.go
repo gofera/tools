@@ -27,12 +27,17 @@ var (
 	contentPath   = flag.String("content", ".", "base path for presentation content")
 	usePlayground = flag.Bool("use_playground", false, "run code snippets using play.golang.org; if false, run them locally and deliver results by WebSocket transport")
 	nativeClient  = flag.Bool("nacl", false, "use Native Client environment playground (prevents non-Go code execution) when using local WebSocket transport")
+	urlPrefix     = flag.String("urlprefix", "", "url prefix, if show in https://tramweb/ppt, the value should be ppt")
 )
 
 func main() {
 	flag.BoolVar(&present.PlayEnabled, "play", true, "enable playground (permit execution of arbitrary user code)")
 	flag.BoolVar(&present.NotesEnabled, "notes", false, "enable presenter notes (press 'N' from the browser to display them)")
 	flag.Parse()
+	if len(*urlPrefix) > 0 && (*urlPrefix)[0] != '/' {
+		*urlPrefix = "/" + *urlPrefix
+	}
+	present.UrlPrefix = *urlPrefix
 
 	if os.Getenv("GAE_ENV") == "standard" {
 		log.Print("Configuring for App Engine Standard")

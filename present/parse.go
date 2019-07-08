@@ -38,7 +38,8 @@ func (d *Doc) Render(w io.Writer, t *template.Template) error {
 		Template     *template.Template
 		PlayEnabled  bool
 		NotesEnabled bool
-	}{d, t, PlayEnabled, NotesEnabled}
+		UrlPrefix    string
+	}{d, t, PlayEnabled, NotesEnabled, UrlPrefix}
 	return t.ExecuteTemplate(w, "root", data)
 }
 
