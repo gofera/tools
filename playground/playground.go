@@ -19,6 +19,7 @@ import (
 	"net/url"
 	"os"
 	"os/exec"
+	"path"
 	"strings"
 	"time"
 
@@ -45,6 +46,15 @@ type PlayResp struct {
 	Status int
 	IsTest bool
 	TestsFailed int
+}
+
+func workDir(referer string) string {
+	const ppt = "/ppt/"
+	i := strings.Index(referer, ppt)
+	if i == -1 {
+		return ""
+	}
+	return path.Dir(referer[i + len(ppt):])
 }
 
 func bounce(w http.ResponseWriter, r *http.Request) {
@@ -117,6 +127,10 @@ func bounce(w http.ResponseWriter, r *http.Request) {
 	cmd := exec.Command(bin, args...)
 	cmd.Stdout = out
 	cmd.Stderr = out
+	wd := workDir(r.Header.Get("Referer"))
+	if wd != "" {
+		cmd.Dir = wd
+	}
 	err = cmd.Run()
 	strOut := out.String()
 	if err != nil {
