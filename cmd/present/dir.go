@@ -248,9 +248,13 @@ func dirList(w io.Writer, name string) (isDir bool, err error) {
 		if name == "." && fi.Name() == "golang.org" {
 			continue
 		}
+		prefix := *urlPrefix
+		for prefix != "" && prefix[0] == '/' {
+			prefix = prefix[1:]
+		}
 		e := dirEntry{
 			Name: fi.Name(),
-			Path: filepath.ToSlash(filepath.Join(*urlPrefix, strippedPath, fi.Name())),
+			Path: filepath.ToSlash(filepath.Join(prefix, strippedPath, fi.Name())),
 		}
 		if fi.IsDir() && showDir(e.Name) {
 			d.Dirs = append(d.Dirs, e)
