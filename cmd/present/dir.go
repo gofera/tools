@@ -123,7 +123,7 @@ func dirHandler(w http.ResponseWriter, r *http.Request) {
 		http.NotFound(w, r)
 		return
 	}
-	name := strings.Replace(filepath.Join(*contentPath, r.URL.Path), "\\", "/", -1)
+	name := filepath.ToSlash(filepath.Join(*contentPath, r.URL.Path))
 	if isDoc(name) {
 		if err := sync(name); err != nil {
 			log.Println(err)
