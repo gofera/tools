@@ -38,13 +38,13 @@ func Style(s string) template.HTML {
 
 // font returns s with font indicators turned into HTML font tags.
 func font(s string) string {
-	if !strings.ContainsAny(s, "[`_*") {
+	if !strings.ContainsAny(s, "[`_*$") {
 		return s
 	}
 
 	skipSplit := false
 	if len(s) > 2 {
-		for _, tag := range []byte("`_*") {
+		for _, tag := range []byte("`_*$") {
 			if s[0] == tag && s[len(s)-1] == tag {
 				skipSplit = true
 				break
@@ -68,7 +68,7 @@ Word:
 			words[w] = link
 			continue Word
 		}
-		const marker = "_*`"
+		const marker = "_*`$"
 		// Initial punctuation is OK but must be peeled off.
 		first := strings.IndexAny(word, marker)
 		if first == -1 {
@@ -88,10 +88,10 @@ Word:
 		const quote = "&#34;"
 		const style = "style=" + quote
 		css := ""
-		if len(word) > 1 + len(style) + len(quote) && strings.HasPrefix(word[1:], style) {
-			q := strings.Index(word[1 + len(style):], quote)
+		if len(word) > 1+len(style)+len(quote) && strings.HasPrefix(word[1:], style) {
+			q := strings.Index(word[1+len(style):], quote)
 			if q != -1 {
-				css = word[1+len(style):1+len(style)+q]
+				css = word[1+len(style) : 1+len(style)+q]
 			}
 		}
 
@@ -119,6 +119,13 @@ Word:
 				open += "<code style=" + css + ">"
 			}
 			close = "</code>"
+		case '$':
+			if css == "" {
+				open += "<latex>"
+			} else {
+				open += "<latex style=" + css + ">"
+			}
+			close = "</latex>"
 		}
 		// Closing marker must be at the end of the token or else followed by punctuation.
 		last := strings.LastIndex(word, word[:1])
@@ -190,15 +197,27 @@ func split(s string) []string {
 				return
 			}
 		}
+		word := strings.Replace(s[start:end], "\\$", "$", -1)
 		// No link; just add the word.
-		words = append(words, s[start:end])
+		words = append(words, word)
 		start = end
 	}
 
 	wasSpace := false
+	escaped := false
+	wrapped := false
 	for i, r := range s {
+		if r == '$' && !escaped {
+			wrapped = !wrapped
+			if wrapped {
+				appendWord(i)
+			} else {
+				appendWord(i + 1)
+			}
+		}
+		escaped = r == '\\'
 		isSpace := unicode.IsSpace(r)
-		if i > start && isSpace != wasSpace {
+		if i > start && !wrapped && isSpace != wasSpace {
 			appendWord(i)
 		}
 		wasSpace = isSpace

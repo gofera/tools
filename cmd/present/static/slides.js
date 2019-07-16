@@ -513,6 +513,12 @@ function addGeneralStyle() {
   el.href = urlPrefix + PERMANENT_URL_PREFIX + 'styles.css';
   document.body.appendChild(el);
 
+  var el = document.createElement('link');
+  el.rel = 'stylesheet';
+  el.type = 'text/css';
+  el.href = urlPrefix + PERMANENT_URL_PREFIX + 'katex/katex.css';
+  document.body.appendChild(el);
+
   var el = document.createElement('meta');
   el.name = 'viewport';
   el.content = 'width=device-width,height=device-height,initial-scale=1';
@@ -526,6 +532,15 @@ function addGeneralStyle() {
   scaleSmallViewports();
 };
 
+function updateKetx() {
+  var latexs = document.getElementsByTagName("latex");
+  for (var i = 0; i < latexs.length; i++) {
+    if (latexs[i].innerText.length>0){
+      katex.render(latexs[i].innerText, latexs[i], {})
+    }
+  }
+}
+
 function handleDomLoaded() {
   slideEls = document.querySelectorAll('section.slides > article');
 
@@ -533,6 +548,9 @@ function handleDomLoaded() {
 
   addFontStyle();
   addGeneralStyle();
+
+  updateKetx();
+
   addEventListeners();
 
   updateSlides();

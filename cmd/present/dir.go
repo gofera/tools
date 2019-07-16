@@ -63,7 +63,7 @@ func userRepository(name string) (repoPath, dir string) {
 			case 1:
 				user = name[len(repo):i]
 			case 3:
-				repoName = name[last+1:i]
+				repoName = name[last+1 : i]
 			}
 			if cnt == 1 {
 				user = name[len(repo):i]
@@ -123,7 +123,7 @@ func dirHandler(w http.ResponseWriter, r *http.Request) {
 		http.NotFound(w, r)
 		return
 	}
-	name := filepath.Join(*contentPath, r.URL.Path)
+	name := filepath.ToSlash(filepath.Join(*contentPath, r.URL.Path))
 	if isDoc(name) {
 		if err := sync(name); err != nil {
 			log.Println(err)
@@ -310,7 +310,7 @@ func showDir(n string) bool {
 type dirListData struct {
 	Path                          string
 	Dirs, Slides, Articles, Other dirEntrySlice
-	UrlPrefix string
+	UrlPrefix                     string
 }
 
 type dirEntry struct {
