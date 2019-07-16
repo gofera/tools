@@ -197,15 +197,27 @@ func split(s string) []string {
 				return
 			}
 		}
+		word := strings.Replace(s[start:end], "\\$", "$", -1)
 		// No link; just add the word.
-		words = append(words, s[start:end])
+		words = append(words, word)
 		start = end
 	}
 
 	wasSpace := false
+	escaped := false
+	wrapped := false
 	for i, r := range s {
+		if r == '$' && !escaped {
+			wrapped = !wrapped
+			if wrapped {
+				appendWord(i)
+			} else {
+				appendWord(i + 1)
+			}
+		}
+		escaped = r == '\\'
 		isSpace := unicode.IsSpace(r)
-		if i > start && isSpace != wasSpace {
+		if i > start && !wrapped && isSpace != wasSpace {
 			appendWord(i)
 		}
 		wasSpace = isSpace
