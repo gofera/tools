@@ -13,6 +13,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"golang.org/x/tools/present"
@@ -64,6 +65,9 @@ func main() {
 		}
 		*basePath = p.Dir
 	}
+
+	umlJarPath = filepath.Join(*basePath, "lib/plantuml.jar")
+
 	err := initTemplates(*basePath)
 	if err != nil {
 		log.Fatalf("Failed to parse templates: %v", err)

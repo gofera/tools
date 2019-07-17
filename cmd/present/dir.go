@@ -181,7 +181,10 @@ func initTemplates(base string) error {
 
 		// Read and parse the input.
 		tmpl := present.Template()
-		tmpl = tmpl.Funcs(template.FuncMap{"playable": playable})
+		tmpl = tmpl.Funcs(template.FuncMap{
+			"playable": playable,
+			"genUML":   genUML,
+		})
 		if _, err := tmpl.ParseFiles(actionTmpl, contentTmpl); err != nil {
 			return err
 		}
