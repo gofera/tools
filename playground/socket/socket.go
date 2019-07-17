@@ -66,6 +66,7 @@ type Message struct {
 // Options specify additional message options.
 type Options struct {
 	Race bool // use -race flag when building code (for "run" only)
+	Ext  string
 }
 
 // NewHandler returns a websocket server which checks the origin of requests.
@@ -188,7 +189,14 @@ func startProcess(id, body string, dest chan<- *Message, opt *Options) *process 
 			err = errors.New("script execution is not allowed")
 		}
 	} else {
-		err = p.start(body, opt)
+		switch opt.Ext {
+		case ".java":
+			err = p.startJava(body, opt)
+		case ".go":
+			err = p.start(body, opt)
+		default:
+			err = errors.New("Unsupported language")
+		}
 	}
 	if err != nil {
 		p.end(err)

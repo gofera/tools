@@ -87,6 +87,7 @@ func init() {
 		".pl":     true,
 		".lua":    true,
 		".groovy": true,
+		".java":   true,
 	}
 }
 

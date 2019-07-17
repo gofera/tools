@@ -53,7 +53,7 @@ function initPlayground(transport) {
 			output.style.display = 'block';
 			outpre.innerHTML = '';
 			run1.style.display = 'none';
-			var options = {Race: sk};
+			var options = {Race: sk, Ext: code.getAttribute("ext")};
 			running = transport.Run(text(code), PlaygroundOutput(outpre), options);
 			if (window.notesEnabled) updatePlayStorage('onRun', index, e);
 		}
