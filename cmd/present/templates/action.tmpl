@@ -41,6 +41,10 @@ It determines how the formatting actions are rendered.
 <latex class="katex-display">{{.Content}}</latex>
 {{end}}
 
+{{define "uml"}}
+<div class="image">{{genUML .File}}</div>
+{{end}}
+
 {{define "video"}}
 <div class="video">
   <video {{with .Height}} height="{{.}}"{{end}}{{with .Width}} width="{{.}}"{{end}} controls>
