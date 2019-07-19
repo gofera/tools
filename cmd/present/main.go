@@ -33,7 +33,7 @@ var (
 
 func main() {
 	flag.BoolVar(&present.PlayEnabled, "play", true, "enable playground (permit execution of arbitrary user code)")
-	flag.BoolVar(&present.NotesEnabled, "notes", false, "enable presenter notes (press 'N' from the browser to display them)")
+	flag.BoolVar(&present.NotesEnabled, "notes", true, "enable presenter notes (press 'N' from the browser to display them)")
 	flag.Parse()
 	if len(*urlPrefix) > 0 && (*urlPrefix)[0] != '/' {
 		*urlPrefix = "/" + *urlPrefix
