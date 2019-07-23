@@ -541,7 +541,7 @@ function updateKetx() {
   }
 }
 
-var workerURL = '/static/graphivs/lite.render.js';
+var workerURL = urlPrefix + PERMANENT_URL_PREFIX + 'graphivs/lite.render.js';
 let viz = new Viz({workerURL});
 
 function updateGraphivs() {
