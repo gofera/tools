@@ -369,6 +369,9 @@ func (p *process) start(body string, opt *Options) error {
 		bin += ".exe"
 	}
 
+	_ = os.Remove(src)
+	_ = os.Remove(bin)
+
 	// write body to x.go
 	defer os.Remove(src)
 	err := ioutil.WriteFile(src, []byte(body), 0666)

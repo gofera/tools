@@ -9,7 +9,8 @@ import (
 
 func (p *process) startJava(body string, opt *Options) error {
 	compDir := filepath.Join(tmpdir, "compile"+strconv.Itoa(<-uniq))
-	err := os.MkdirAll(compDir, os.ModeDir)
+	_ = os.RemoveAll(compDir)
+	err := os.MkdirAll(compDir, os.ModePerm)
 	if err != nil {
 		return err
 	}
