@@ -16,15 +16,12 @@ func (p *process) startJava(body string, opt *Options) error {
 	}
 	path := filepath.Join(compDir, "Main")
 	src := path + ".java"
-	bin := path //+ ".class"
-
-	defer os.Remove(src)
 
 	err = ioutil.WriteFile(src, []byte(body), 0666)
 	if err != nil {
 		return err
 	}
-	p.bin = bin
+	p.bin = compDir
 	dir, file := filepath.Split(src)
 	cmd := p.cmd(dir, "javac", file)
 	cmd.Stdout = cmd.Stderr

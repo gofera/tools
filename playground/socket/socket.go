@@ -184,7 +184,7 @@ func startProcess(id, body string, dest chan<- *Message, opt *Options) *process 
 	var err error
 	if path, args := shebang(body); path != "" {
 		if RunScripts {
-			err = p.startProcess(path, args, body)
+			err = p.startScriptByShebang(path, args, body)
 		} else {
 			err = errors.New("script execution is not allowed")
 		}
@@ -195,7 +195,7 @@ func startProcess(id, body string, dest chan<- *Message, opt *Options) *process 
 		case ".go":
 			err = p.start(body, opt)
 		default:
-			err = errors.New("Unsupported language")
+			err = p.startScript(body, opt)
 		}
 	}
 	if err != nil {
@@ -212,7 +212,7 @@ func startProcess(id, body string, dest chan<- *Message, opt *Options) *process 
 // given error value. It also removes the binary, if present.
 func (p *process) end(err error) {
 	if p.bin != "" {
-		defer os.Remove(p.bin)
+		defer os.RemoveAll(p.bin)
 	}
 	m := &Message{Kind: "end"}
 	if err != nil {
@@ -335,7 +335,7 @@ func shebang(body string) (path string, args []string) {
 		body = body[:i]
 	}
 	fs := strings.Fields(body[2:])
-	return fs[0], fs
+	return fs[0], fs[1:]
 }
 
 // startProcess starts a given program given its path and passing the given body
