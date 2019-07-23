@@ -77,6 +77,11 @@ var scripts = []ScriptRunner{
 		Bin: []string{"lua"},
 		Run: simpleRun,
 	},
+	{
+		Ext: []string{"pl"},
+		Bin: []string{"perl"},
+		Run: simpleRun,
+	},
 }
 
 func simpleRun(p *process, bin string, args []string, file string) error {
