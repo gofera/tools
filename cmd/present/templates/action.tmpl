@@ -41,6 +41,10 @@ It determines how the formatting actions are rendered.
 <latex class="katex-display">{{.Content}}</latex>
 {{end}}
 
+{{define "graphivz"}}
+<graphivz {{with .Height}} height="{{.}}"{{end}}{{with .Width}} width="{{.}}"{{end}}>{{.Content}}</graphivz>
+{{end}}
+
 {{define "uml"}}
 <div class="image">{{genUML .File}}</div>
 {{end}}

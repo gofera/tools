@@ -535,10 +535,35 @@ function addGeneralStyle() {
 function updateKetx() {
   var latexs = document.getElementsByTagName("latex");
   for (var i = 0; i < latexs.length; i++) {
-    if (latexs[i].innerText.length>0){
-      katex.render(latexs[i].innerText, latexs[i], {})
-    }
+      if (latexs[i].innerText.length > 0) {
+          katex.render(latexs[i].innerText, latexs[i], {})
+      }
   }
+}
+
+var workerURL = '/static/graphivs/lite.render.js';
+let viz = new Viz({workerURL});
+
+function updateGraphivs() {
+    var graphs = document.getElementsByTagName("graphivz");
+    for (var i = 0; i < graphs.length; i++) {
+        var node = graphs[i];
+        if (node.innerText.length > 0) {
+            viz.renderSVGElement(node.innerText)
+                .then(function (element) {
+                    if (node.hasAttribute('width')) {
+                        element.attributes['width'].textContent = node.attributes['width'].textContent
+                        element.attributes['height'].textContent = node.attributes['height'].textContent
+                    }
+                    node.textContent = ""
+                    node.appendChild(element)
+                })
+                .catch(error => {
+                    node.textContent = "Fail to render graphivz"
+                    console.error(error);
+                })
+        }
+    }
 }
 
 function handleDomLoaded() {
@@ -550,6 +575,7 @@ function handleDomLoaded() {
   addGeneralStyle();
 
   updateKetx();
+  updateGraphivs();
 
   addEventListeners();
 
