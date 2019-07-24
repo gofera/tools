@@ -22,7 +22,6 @@ import (
 	"io"
 	"io/ioutil"
 	"log"
-	"net"
 	"net/http"
 	"net/url"
 	"os"
@@ -66,6 +65,7 @@ type Message struct {
 // Options specify additional message options.
 type Options struct {
 	Race bool // use -race flag when building code (for "run" only)
+	Ext  string
 }
 
 // NewHandler returns a websocket server which checks the origin of requests.
@@ -79,22 +79,23 @@ func NewHandler(origin *url.URL) websocket.Server {
 
 // handshake checks the origin of a request during the websocket handshake.
 func handshake(c *websocket.Config, req *http.Request) error {
-	o, err := websocket.Origin(c, req)
-	if err != nil {
-		log.Println("bad websocket origin:", err)
-		return websocket.ErrBadWebSocketOrigin
-	}
-	_, port, err := net.SplitHostPort(c.Origin.Host)
-	if err != nil {
-		log.Println("bad websocket origin:", err)
-		return websocket.ErrBadWebSocketOrigin
-	}
-	ok := c.Origin.Scheme == o.Scheme && (c.Origin.Host == o.Host || c.Origin.Host == net.JoinHostPort(o.Host, port))
-	if !ok {
-		log.Println("bad websocket origin:", o)
-		return websocket.ErrBadWebSocketOrigin
-	}
-	log.Println("accepting connection from:", req.RemoteAddr)
+	// skip origin check
+	//o, err := websocket.Origin(c, req)
+	//if err != nil {
+	//	log.Println("bad websocket origin:", err)
+	//	return websocket.ErrBadWebSocketOrigin
+	//}
+	//_, port, err := net.SplitHostPort(c.Origin.Host)
+	//if err != nil {
+	//	log.Println("bad websocket origin:", err)
+	//	return websocket.ErrBadWebSocketOrigin
+	//}
+	//ok := c.Origin.Scheme == o.Scheme && (c.Origin.Host == o.Host || c.Origin.Host == net.JoinHostPort(o.Host, port))
+	//if !ok {
+	//	log.Println("bad websocket origin:", o)
+	//	return websocket.ErrBadWebSocketOrigin
+	//}
+	//log.Println("accepting connection from:", req.RemoteAddr)
 	return nil
 }
 
@@ -183,12 +184,19 @@ func startProcess(id, body string, dest chan<- *Message, opt *Options) *process 
 	var err error
 	if path, args := shebang(body); path != "" {
 		if RunScripts {
-			err = p.startProcess(path, args, body)
+			err = p.startScriptByShebang(path, args, body)
 		} else {
 			err = errors.New("script execution is not allowed")
 		}
 	} else {
-		err = p.start(body, opt)
+		switch opt.Ext {
+		case ".java":
+			err = p.startJava(body, opt)
+		case ".go":
+			err = p.start(body, opt)
+		default:
+			err = p.startScript(body, opt)
+		}
 	}
 	if err != nil {
 		p.end(err)
@@ -204,7 +212,7 @@ func startProcess(id, body string, dest chan<- *Message, opt *Options) *process 
 // given error value. It also removes the binary, if present.
 func (p *process) end(err error) {
 	if p.bin != "" {
-		defer os.Remove(p.bin)
+		defer os.RemoveAll(p.bin)
 	}
 	m := &Message{Kind: "end"}
 	if err != nil {
@@ -327,7 +335,7 @@ func shebang(body string) (path string, args []string) {
 		body = body[:i]
 	}
 	fs := strings.Fields(body[2:])
-	return fs[0], fs
+	return fs[0], fs[1:]
 }
 
 // startProcess starts a given program given its path and passing the given body
@@ -360,6 +368,9 @@ func (p *process) start(body string, opt *Options) error {
 	if runtime.GOOS == "windows" {
 		bin += ".exe"
 	}
+
+	_ = os.Remove(src)
+	_ = os.Remove(bin)
 
 	// write body to x.go
 	defer os.Remove(src)

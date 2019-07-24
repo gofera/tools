@@ -67,7 +67,7 @@ function initNotes() {
     var el = w.document.createElement('link');
     el.rel = 'stylesheet';
     el.type = 'text/css';
-    el.href = PERMANENT_URL_PREFIX + 'notes.css';
+    el.href = urlPrefix + PERMANENT_URL_PREFIX + 'notes.css';
     w.document.body.appendChild(el);
     w.document.querySelector('head').appendChild(el);
   }

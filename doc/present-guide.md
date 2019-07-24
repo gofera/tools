@@ -2,6 +2,26 @@
 
 ## Feature
 
+### Play Code
+
+#### Java
+
+`.play <your-java-file.java>`
+
+Java file must has no package and define a `Main` class with `main` method.
+
+A minimize hello world could be
+
+_hello.java_
+
+```java
+class Main{
+    public static void main(String[] args) {
+        System.out.println("hello world");
+    }
+}
+```
+
 ### Latex
 
 **Inline**
@@ -27,3 +47,7 @@ $$<formula-id>
 // your formula here
 $$
 ```
+
+### PlantUML
+
+`.uml <file-path>`

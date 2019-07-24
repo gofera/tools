@@ -500,8 +500,7 @@ function addFontStyle() {
   var el = document.createElement('link');
   el.rel = 'stylesheet';
   el.type = 'text/css';
-  el.href = '//fonts.googleapis.com/css?family=' +
-            'Open+Sans:regular,semibold,italic,italicsemibold|Droid+Sans+Mono';
+  el.href = urlPrefix + PERMANENT_URL_PREFIX + 'font.css';
 
   document.body.appendChild(el);
 };
@@ -535,10 +534,35 @@ function addGeneralStyle() {
 function updateKetx() {
   var latexs = document.getElementsByTagName("latex");
   for (var i = 0; i < latexs.length; i++) {
-    if (latexs[i].innerText.length>0){
-      katex.render(latexs[i].innerText, latexs[i], {})
-    }
+      if (latexs[i].innerText.length > 0) {
+          katex.render(latexs[i].innerText, latexs[i], {})
+      }
   }
+}
+
+var workerURL = urlPrefix + PERMANENT_URL_PREFIX + 'graphivs/lite.render.js';
+let viz = new Viz({workerURL});
+
+function updateGraphivs() {
+    var graphs = document.getElementsByTagName("graphivz");
+    for (var i = 0; i < graphs.length; i++) {
+        var node = graphs[i];
+        if (node.innerText.length > 0) {
+            viz.renderSVGElement(node.innerText)
+                .then(function (element) {
+                    if (node.hasAttribute('width')) {
+                        element.attributes['width'].textContent = node.attributes['width'].textContent
+                        element.attributes['height'].textContent = node.attributes['height'].textContent
+                    }
+                    node.textContent = ""
+                    node.appendChild(element)
+                })
+                .catch(error => {
+                    node.textContent = "Fail to render graphivz"
+                    console.error(error);
+                })
+        }
+    }
 }
 
 function handleDomLoaded() {
@@ -550,6 +574,7 @@ function handleDomLoaded() {
   addGeneralStyle();
 
   updateKetx();
+  updateGraphivs();
 
   addEventListeners();
 
