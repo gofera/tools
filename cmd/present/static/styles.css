@@ -378,10 +378,12 @@ pre.numbers span:before {
 }
 
 code {
-  font-size: 95%;
   font-family: 'Droid Sans Mono', 'Courier New', monospace;
-
   color: black;
+}
+
+[contenteditable="true"]:focus {
+  outline: none;
 }
 
 article > .image,

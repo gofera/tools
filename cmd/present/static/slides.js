@@ -409,21 +409,21 @@ function updateHash() {
 
 function handleBodyKeyDown(event) {
   // If we're in a code element, only handle pgup/down.
-  var inCode = event.target.classList.contains('code');
+  var edit = event.target.attributes["contenteditable"]
 
   switch (event.keyCode) {
     case 78: // 'N' opens presenter notes window
-      if (!inCode && notesEnabled) toggleNotesWindow();
+      if (!edit && notesEnabled) toggleNotesWindow();
       break;
     case 72: // 'H' hides the help text
     case 27: // escape key
-      if (!inCode) hideHelpText();
+      if (!edit) hideHelpText();
       break;
 
     case 39: // right arrow
     case 13: // Enter
     case 32: // space
-      if (inCode) break;
+      if (edit) break;
     case 34: // PgDn
       nextSlide();
       event.preventDefault();
@@ -431,20 +431,20 @@ function handleBodyKeyDown(event) {
 
     case 37: // left arrow
     case 8: // Backspace
-      if (inCode) break;
+      if (edit) break;
     case 33: // PgUp
       prevSlide();
       event.preventDefault();
       break;
 
     case 40: // down arrow
-      if (inCode) break;
+      if (edit) break;
       nextSlide();
       event.preventDefault();
       break;
 
     case 38: // up arrow
-      if (inCode) break;
+      if (edit) break;
       prevSlide();
       event.preventDefault();
       break;
@@ -492,6 +492,20 @@ function addEventListeners() {
       if (mql.matches) beforePrint();
     });
   }
+
+  // code edit
+  var codes = document.getElementsByClassName("code") // div
+  for (var i = 0; i < codes.length; i++) {
+    let node = codes[i];
+    let pre = node.firstElementChild;
+    if (pre && pre.className.includes("language-")) {
+      node.addEventListener("input", function () {
+        let restore = saveCaretPosition(this);
+        Prism.highlightAllUnder(node, false)
+        restore();
+      })
+    }
+  }
 }
 
 /* Initialization */
@@ -503,7 +517,7 @@ function addFontStyle() {
   el.href = urlPrefix + PERMANENT_URL_PREFIX + 'font.css';
 
   document.body.appendChild(el);
-};
+}
 
 function addGeneralStyle() {
   var el = document.createElement('link');
@@ -534,8 +548,9 @@ function addGeneralStyle() {
 function updateKetx() {
   var latexs = document.getElementsByTagName("latex");
   for (var i = 0; i < latexs.length; i++) {
-      if (latexs[i].innerText.length > 0) {
-          katex.render(latexs[i].innerText, latexs[i], {})
+    let node = latexs[i];
+    if (node.innerText.length > 0) {
+          katex.render(node.innerText, node, {})
       }
   }
 }
@@ -546,7 +561,7 @@ let viz = new Viz({workerURL});
 function updateGraphivs() {
     var graphs = document.getElementsByTagName("graphivz");
     for (var i = 0; i < graphs.length; i++) {
-        var node = graphs[i];
+        let node = graphs[i];
         if (node.innerText.length > 0) {
             viz.renderSVGElement(node.innerText)
                 .then(function (element) {
@@ -676,4 +691,37 @@ function updateOtherWindow(e) {
 
   updatePlay(e);
   updateNotes();
+}
+
+function saveCaretPosition(context){
+  var selection = window.getSelection();
+  var range = selection.getRangeAt(0);
+  range.setStart(context, 0 );
+  var len = range.toString().length;
+
+  return function restore(){
+    var pos = getTextNodeAtPosition(context, len);
+    selection.removeAllRanges();
+    var range = new Range();
+    range.setStart(pos.node ,pos.position);
+    selection.addRange(range);
+  }
+}
+
+function getTextNodeAtPosition(root, index){
+  var lastNode = null;
+
+  var treeWalker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT,function next(elem) {
+    if(index >= elem.textContent.length){
+      index -= elem.textContent.length;
+      lastNode = elem;
+      return NodeFilter.FILTER_REJECT
+    }
+    return NodeFilter.FILTER_ACCEPT;
+  });
+  var c = treeWalker.nextNode();
+  return {
+    node: c? c: root,
+    position: c? index:  0
+  };
 }

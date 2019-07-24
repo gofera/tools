@@ -51,7 +51,16 @@ func (c Code) TemplateName() string { return "code" }
 var (
 	highlightRE = regexp.MustCompile(`\s+HL([a-zA-Z0-9_]+)?$`)
 	hlCommentRE = regexp.MustCompile(`(.+) // HL(.*)$`)
-	codeRE      = regexp.MustCompile(`\.(code|play)\s+((?:(?:-edit|-numbers|-style=(?:[^\s]+))\s+)*)([^\s]+)(?:\s+(.*))?$`)
+	codeRE      = regexp.MustCompile(`\.(code|play)\s+((?:(?:-edit|-numbers|-style|-lang=(?:[^\s]+))\s+)*)([^\s]+)(?:\s+(.*))?$`)
+	language    = map[string]string{
+		".java": "java",
+		".py":   "python",
+		".pl":   "perl",
+		".sql":  "sql",
+		".go":   "go",
+		".c":    "c",
+		".lua":  "lua",
+	}
 )
 
 // parseCode parses a code present directive. Its syntax:
@@ -113,14 +122,28 @@ func parseCode(ctx *Context, sourceFile string, sourceLine int, cmd string) (Ele
 
 	lines := codeLines(textBytes, lo, hi)
 
+	ext := filepath.Ext(filename)
+	const LANG = "-lang="
+	lang := ""
+	i := strings.Index(flags, LANG)
+	if i != -1 {
+		lang = flags[i+len(LANG):]
+		n := strings.Index(lang, " ")
+		if n != -1 {
+			lang = lang[:n]
+		}
+	} else {
+		lang = language[ext]
+	}
 	data := &codeTemplateData{
+		Lang:    lang,
 		Lines:   formatLines(lines, highlight),
 		Edit:    strings.Contains(flags, "-edit"),
 		Numbers: strings.Contains(flags, "-numbers"),
 	}
 	const STYLE = "-style="
 	style := ""
-	i := strings.Index(flags, STYLE)
+	i = strings.Index(flags, STYLE)
 	if i != -1 {
 		style = flags[i+len(STYLE):]
 		n := strings.Index(style, " ")
@@ -145,7 +168,7 @@ func parseCode(ctx *Context, sourceFile string, sourceLine int, cmd string) (Ele
 		Play:     play,
 		Edit:     data.Edit,
 		FileName: filepath.Base(filename),
-		Ext:      filepath.Ext(filename),
+		Ext:      ext,
 		Raw:      rawCode(lines),
 		Style:    template.HTMLAttr(style),
 	}, nil
@@ -183,6 +206,7 @@ func rawCode(lines []codeLine) []byte {
 }
 
 type codeTemplateData struct {
+	Lang           string
 	Lines          []codeLine
 	Prefix, Suffix []byte
 	Edit, Numbers  bool
@@ -198,12 +222,12 @@ var codeTemplate = template.Must(template.New("code").Funcs(template.FuncMap{
 const codeTemplateHTML = `
 {{with .Prefix}}<pre style="display: none"><span>{{printf "%s" .}}</span></pre>{{end}}
 
-<pre{{if .Edit}} contenteditable="true" spellcheck="false"{{end}}{{if .Numbers}} class="numbers"{{end}}>{{/*
+<pre{{if .Edit}} contenteditable="true" spellcheck="false"{{end}}class="{{with .Lang}}language-{{.}}{{end}}{{if .Numbers}} line-numbers{{end}}"><code>{{/*
 	*/}}{{range .Lines}}<span num="{{.N}}">{{/*
 	*/}}{{if .HL}}{{leadingSpace .L}}<b>{{trimSpace .L}}</b>{{/*
 	*/}}{{else}}{{.L}}{{end}}{{/*
 */}}</span>
-{{end}}</pre>
+{{end}}</code></pre>
 
 {{with .Suffix}}<pre style="display: none"><span>{{printf "%s" .}}</span></pre>{{end}}
 `
