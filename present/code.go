@@ -51,7 +51,7 @@ func (c Code) TemplateName() string { return "code" }
 var (
 	highlightRE = regexp.MustCompile(`\s+HL([a-zA-Z0-9_]+)?$`)
 	hlCommentRE = regexp.MustCompile(`(.+) // HL(.*)$`)
-	codeRE      = regexp.MustCompile(`\.(code|play)\s+((?:(?:-edit|-numbers|-style|-lang=(?:[^\s]+))\s+)*)([^\s]+)(?:\s+(.*))?$`)
+	codeRE      = regexp.MustCompile(`\.(code|play)\s+((?:(?:-edit|-numbers|-style=(?:[^\s]+)|-lang=(?:[^\s]+))\s+)*)([^\s]+)(?:\s+(.*))?$`)
 	language    = map[string]string{
 		".java": "java",
 		".py":   "python",
