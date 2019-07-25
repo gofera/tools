@@ -448,7 +448,7 @@ function handleBodyKeyDown(event) {
       prevSlide();
       event.preventDefault();
       break;
-    case 9:
+    case 9: // tab
       if (edit) {
         event.preventDefault()
         document.execCommand('insertHTML', false, '&#009');
@@ -684,6 +684,10 @@ function setupNotesSync() {
 // An update to local storage is caught only by the other window
 // The triggering window does not handle any sync actions
 function updateOtherWindow(e) {
+  // if no notes window opened, don't need sync
+  if (isParentWindow && (!notesWindow||notesWindow.closed)) {
+    return;
+  }
   // Ignore remove storage events which are not meant to update the other window
   var isRemoveStorageEvent = !e.newValue;
   if (isRemoveStorageEvent) return;
