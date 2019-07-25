@@ -222,7 +222,8 @@ var codeTemplate = template.Must(template.New("code").Funcs(template.FuncMap{
 const codeTemplateHTML = `
 {{with .Prefix}}<pre style="display: none"><span>{{printf "%s" .}}</span></pre>{{end}}
 
-<pre{{if .Edit}} contenteditable="true" spellcheck="false"{{end}}class="{{with .Lang}}language-{{.}}{{end}}{{if .Numbers}} line-numbers{{end}}"><code>{{/*
+<pre class="{{with .Lang}}language-{{.}}{{end}}{{if .Numbers}} line-numbers{{end}}">
+<code {{if .Edit}} contenteditable="true" spellcheck="false"{{end}} class="{{if .Edit}}edit-code{{end}} {{with .Lang}}language-{{.}}{{end}}">{{/*
 	*/}}{{range .Lines}}<span num="{{.N}}">{{/*
 	*/}}{{if .HL}}{{leadingSpace .L}}<b>{{trimSpace .L}}</b>{{/*
 	*/}}{{else}}{{.L}}{{end}}{{/*

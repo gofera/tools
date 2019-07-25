@@ -494,14 +494,15 @@ function addEventListeners() {
   }
 
   // code edit
-  var codes = document.getElementsByClassName("code") // div
+  var codes = document.getElementsByTagName("code")
   for (var i = 0; i < codes.length; i++) {
-    let node = codes[i];
-    let pre = node.firstElementChild;
-    if (pre && pre.className.includes("language-")) {
-      node.addEventListener("input", function () {
+    let code = codes[i];
+    let pre = code.parentElement
+    if (pre) {
+      Prism.highlightElement(code, true)
+      code.addEventListener("input", function () {
         let restore = saveCaretPosition(this);
-        Prism.highlightAllUnder(node, false)
+        Prism.highlightElement(code, false)
         restore();
       })
     }
