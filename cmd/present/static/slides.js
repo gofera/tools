@@ -448,8 +448,14 @@ function handleBodyKeyDown(event) {
       prevSlide();
       event.preventDefault();
       break;
+    case 9:
+      if (edit) {
+        event.preventDefault()
+        document.execCommand('insertHTML', false, '&#009');
+      }
+      break;
   }
-};
+}
 
 function scaleSmallViewports() {
   var el = document.querySelector('section.slides');

@@ -380,6 +380,8 @@ pre.numbers span:before {
 code {
   font-family: 'Droid Sans Mono', 'Courier New', monospace;
   color: black;
+  tab-size: 2.2em;
+  -moz-tab-size: 2.2em;
 }
 
 [contenteditable="true"]:focus {
