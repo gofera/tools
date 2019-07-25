@@ -179,45 +179,66 @@ function SocketTransport() {
 	var outputs = {};
 	var started = {};
 	var websocket;
-	if (window.location.protocol == "http:") {
-		websocket = new WebSocket('ws://' + window.location.host + '/socket');
-	} else if (window.location.protocol == "https:") {
-		websocket = new WebSocket('wss://' + window.location.host + '/socket');
-	}
-
-	websocket.onclose = function() {
-		console.log('websocket connection closed');
-	};
-
-	websocket.onmessage = function(e) {
-		var m = JSON.parse(e.data);
-		var output = outputs[m.Id];
-		if (output === null)
-			return;
-		if (!started[m.Id]) {
-			output({Kind: 'start'});
-			started[m.Id] = true;
-		}
-		output({Kind: m.Kind, Body: m.Body});
-	};
 
 	function send(m) {
 		websocket.send(JSON.stringify(m));
 	}
 
-	return {
-		Run: function(body, output, options) {
-			var thisID = id+'';
-			id++;
-			outputs[thisID] = output;
-			send({Id: thisID, Kind: 'run', Body: body, Options: options});
-			return {
-				Kill: function() {
-					send({Id: thisID, Kind: 'kill'});
-				}
-			};
-		}
-	};
+    return {
+        Run: function (body, output, options) {
+            let thisID = id + '';
+
+            function run() {
+                id++;
+                outputs[thisID] = output;
+                send({Id: thisID, Kind: 'run', Body: body, Options: options});
+            }
+
+            if (!websocket || websocket.readyState === websocket.CLOSED || websocket.readyState === websocket.CLOSING) {
+                if (window.location.protocol == "http:") {
+                    websocket = new WebSocket('ws://' + window.location.host + '/socket');
+                } else if (window.location.protocol == "https:") {
+                    websocket = new WebSocket('wss://' + window.location.host + '/socket');
+                }
+
+                websocket.onclose = function () {
+                    console.log('websocket connection closed');
+                };
+
+                websocket.onmessage = function (e) {
+                    var m = JSON.parse(e.data);
+                    var output = outputs[m.Id];
+                    if (output === null)
+                        return;
+                    if (!started[m.Id]) {
+                        output({Kind: 'start'});
+                        started[m.Id] = true;
+                    }
+                    output({Kind: m.Kind, Body: m.Body});
+                };
+
+                let open = false;
+                let kill = false;
+                websocket.onopen = function () {
+                    run();
+                }
+            } else {
+                run();
+            }
+            return {
+                Kill: function () {
+                    if (websocket.readyState === websocket.CONNECTING) {
+                        websocket.onopen = function () {
+                        }
+                    } else if (websocket.readyState === websocket.OPEN) {
+                        send({Id: thisID, Kind: 'kill'});
+                    } else {
+                        console.log("Can't kill because web socket closed")
+                    }
+                }
+            };
+        }
+    };
 }
 
 function PlaygroundOutput(el) {
