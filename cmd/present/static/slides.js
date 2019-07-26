@@ -719,11 +719,11 @@ function saveCaretPosition(context){
   }
 }
 
-function getTextNodeAtPosition(root, index){
+function getTextNodeAtPosition(root, index) {
   var lastNode = null;
 
-  var treeWalker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT,function next(elem) {
-    if(index >= elem.textContent.length){
+  var treeWalker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, function next(elem) {
+    if (index >= elem.textContent.length) {
       index -= elem.textContent.length;
       lastNode = elem;
       return NodeFilter.FILTER_REJECT
@@ -732,7 +732,7 @@ function getTextNodeAtPosition(root, index){
   });
   var c = treeWalker.nextNode();
   return {
-    node: c? c: root,
-    position: c? index:  0
+    node: c ? c : (lastNode == null ? root : lastNode),
+    position: c ? index : (lastNode == null ? 0 : lastNode.textContent.length)
   };
 }
