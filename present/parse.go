@@ -67,6 +67,7 @@ func Register(name string, parser ParseFunc) {
 
 // Doc represents an entire document.
 type Doc struct {
+	Theme      string
 	Title      string
 	Subtitle   string
 	Time       time.Time
@@ -74,6 +75,8 @@ type Doc struct {
 	TitleNotes []string
 	Sections   []Section
 	Tags       []string
+	Classes    []string
+	Styles     []string
 }
 
 // Author represents the person who wrote and/or is presenting the document.
@@ -103,6 +106,21 @@ type Section struct {
 	Notes   []string
 	Classes []string
 	Styles  []string
+}
+
+func (s Doc) TitleAttributes() template.HTMLAttr {
+	if len(s.Classes) == 0 && len(s.Styles) == 0 {
+		return ""
+	}
+	var class string
+	if len(s.Classes) > 0 {
+		class = fmt.Sprintf(`class=%q`, strings.Join(s.Classes, " "))
+	}
+	var style string
+	if len(s.Styles) > 0 {
+		style = fmt.Sprintf(`style=%q`, strings.Join(s.Styles, " "))
+	}
+	return template.HTMLAttr(strings.Join([]string{class, style}, " "))
 }
 
 // HTMLAttributes for the section
@@ -287,6 +305,10 @@ func (ctx *Context) Parse(r io.Reader, name string, mode ParseMode) (*Doc, error
 			break
 		}
 
+		if strings.HasPrefix(lines.text[i], ".theme") {
+			doc.Theme = strings.TrimSpace(lines.text[i][6:])
+		}
+
 		if isSpeakerNote(lines.text[i]) {
 			doc.TitleNotes = append(doc.TitleNotes, lines.text[i][2:])
 		}
@@ -305,7 +327,7 @@ func (ctx *Context) Parse(r io.Reader, name string, mode ParseMode) (*Doc, error
 		return nil, err
 	}
 	// Sections
-	if doc.Sections, err = parseSections(ctx, name, lines, []int{}); err != nil {
+	if doc.Sections, err = parseSections(ctx, doc, name, lines, []int{}); err != nil {
 		return nil, err
 	}
 	return doc, nil
@@ -329,7 +351,7 @@ func lesserHeading(text, prefix string) bool {
 
 // parseSections parses Sections from lines for the section level indicated by
 // number (a nil number indicates the top level).
-func parseSections(ctx *Context, name string, lines *Lines, number []int) ([]Section, error) {
+func parseSections(ctx *Context, doc *Doc, name string, lines *Lines, number []int) ([]Section, error) {
 	var sections []Section
 	for i := 1; ; i++ {
 		// Next non-empty line is title.
@@ -349,6 +371,7 @@ func parseSections(ctx *Context, name string, lines *Lines, number []int) ([]Sec
 			Number: append(append([]int{}, number...), i),
 			Title:  text[len(prefix)+1:],
 		}
+		hasBackground := false
 		text, ok = lines.nextNonEmpty()
 		for ok && !lesserHeading(text, prefix) {
 			var e Elem
@@ -387,7 +410,7 @@ func parseSections(ctx *Context, name string, lines *Lines, number []int) ([]Sec
 				section.Notes = append(section.Notes, text[2:])
 			case strings.HasPrefix(text, prefix+"* "):
 				lines.back()
-				subsecs, err := parseSections(ctx, name, lines, section.Number)
+				subsecs, err := parseSections(ctx, doc, name, lines, section.Number)
 				if err != nil {
 					return nil, err
 				}
@@ -397,6 +420,7 @@ func parseSections(ctx *Context, name string, lines *Lines, number []int) ([]Sec
 			case strings.HasPrefix(text, "."):
 				args := strings.Fields(text)
 				if args[0] == ".background" {
+					hasBackground = true
 					section.Classes = append(section.Classes, "background")
 					section.Styles = append(section.Styles, "background-image: url('"+args[1]+"')")
 					break
@@ -435,6 +459,14 @@ func parseSections(ctx *Context, name string, lines *Lines, number []int) ([]Sec
 		if isHeading.MatchString(text) {
 			lines.back()
 		}
+		if !hasBackground && doc.Theme != "" {
+			section.Classes = append(section.Classes, "background")
+			prefix := ""
+			if UrlPrefix != "" {
+				prefix = "/" + UrlPrefix
+			}
+			section.Styles = append(section.Styles, fmt.Sprintf("background-image: url('%s/static/theme/%s/content.png')", prefix, doc.Theme))
+		}
 		sections = append(sections, section)
 	}
 	return sections, nil
@@ -472,6 +504,14 @@ func parseHeader(doc *Doc, lines *Lines) error {
 		} else {
 			return fmt.Errorf("unexpected header line: %q", text)
 		}
+	}
+	if doc.Theme != "" {
+		doc.Classes = append(doc.Classes, "background")
+		prefix := ""
+		if UrlPrefix != "" {
+			prefix = "/" + UrlPrefix
+		}
+		doc.Styles = append(doc.Styles, fmt.Sprintf("background-image: url('%s/static/theme/%s/head.png')", prefix, doc.Theme))
 	}
 	return nil
 }
