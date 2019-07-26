@@ -70,6 +70,7 @@ type Doc struct {
 	Theme      string
 	Title      string
 	Subtitle   string
+	WideScreen bool
 	Time       time.Time
 	Authors    []Author
 	TitleNotes []string
@@ -295,6 +296,7 @@ const (
 // Parse parses a document from r.
 func (ctx *Context) Parse(r io.Reader, name string, mode ParseMode) (*Doc, error) {
 	doc := new(Doc)
+	doc.WideScreen = true
 	lines, err := readLines(r)
 	if err != nil {
 		return nil, err
@@ -307,6 +309,9 @@ func (ctx *Context) Parse(r io.Reader, name string, mode ParseMode) (*Doc, error
 
 		if strings.HasPrefix(lines.text[i], ".theme") {
 			doc.Theme = strings.TrimSpace(lines.text[i][6:])
+			if doc.WideScreen {
+				doc.Theme = doc.Theme + "-wide"
+			}
 			lines.text[i] = ""
 		}
 
@@ -466,7 +471,8 @@ func parseSections(ctx *Context, doc *Doc, name string, lines *Lines, number []i
 			if UrlPrefix != "" {
 				prefix = "/" + UrlPrefix
 			}
-			section.Styles = append(section.Styles, fmt.Sprintf("background-image: url('%s/static/theme/%s/content.png')", prefix, doc.Theme))
+			section.Styles = append(section.Styles,
+				fmt.Sprintf("background-image: url('%s/static/theme/%s/content.png')", prefix, doc.Theme))
 		}
 		sections = append(sections, section)
 	}
