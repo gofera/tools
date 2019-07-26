@@ -416,8 +416,16 @@ function handleBodyKeyDown(event) {
       if (!edit && notesEnabled) toggleNotesWindow();
       break;
     case 72: // 'H' hides the help text
+      if (!edit) {
+        hideHelpText();
+      }
+      break;
     case 27: // escape key
-      if (!edit) hideHelpText();
+      if (edit) {
+        document.activeElement.blur();
+      } else {
+        hideHelpText();
+      }
       break;
 
     case 39: // right arrow
@@ -448,12 +456,13 @@ function handleBodyKeyDown(event) {
       prevSlide();
       event.preventDefault();
       break;
-    case 9:
+    case 9: // tab
       if (edit) {
         event.preventDefault()
         document.execCommand('insertHTML', false, '&#009');
       }
       break;
+
   }
 }
 
@@ -684,6 +693,10 @@ function setupNotesSync() {
 // An update to local storage is caught only by the other window
 // The triggering window does not handle any sync actions
 function updateOtherWindow(e) {
+  // if no notes window opened, don't need sync
+  if (isParentWindow && (!notesWindow||notesWindow.closed)) {
+    return;
+  }
   // Ignore remove storage events which are not meant to update the other window
   var isRemoveStorageEvent = !e.newValue;
   if (isRemoveStorageEvent) return;
@@ -715,11 +728,11 @@ function saveCaretPosition(context){
   }
 }
 
-function getTextNodeAtPosition(root, index){
+function getTextNodeAtPosition(root, index) {
   var lastNode = null;
 
-  var treeWalker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT,function next(elem) {
-    if(index >= elem.textContent.length){
+  var treeWalker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, function next(elem) {
+    if (index >= elem.textContent.length) {
       index -= elem.textContent.length;
       lastNode = elem;
       return NodeFilter.FILTER_REJECT
@@ -728,7 +741,7 @@ function getTextNodeAtPosition(root, index){
   });
   var c = treeWalker.nextNode();
   return {
-    node: c? c: root,
-    position: c? index:  0
+    node: c ? c : (lastNode == null ? root : lastNode),
+    position: c ? index : (lastNode == null ? 0 : lastNode.textContent.length)
   };
 }
