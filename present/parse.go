@@ -469,7 +469,7 @@ func parseSections(ctx *Context, doc *Doc, name string, lines *Lines, number []i
 			section.Classes = append(section.Classes, "background")
 			prefix := ""
 			if UrlPrefix != "" {
-				prefix = "/" + UrlPrefix
+				prefix = UrlPrefix
 			}
 			section.Styles = append(section.Styles,
 				fmt.Sprintf("background-image: url('%s/static/theme/%s/content.png')", prefix, doc.Theme))
