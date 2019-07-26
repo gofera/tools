@@ -417,7 +417,11 @@ function handleBodyKeyDown(event) {
       break;
     case 72: // 'H' hides the help text
     case 27: // escape key
-      if (!edit) hideHelpText();
+      if (edit) {
+        document.activeElement.blur();
+      } else {
+        hideHelpText();
+      }
       break;
 
     case 39: // right arrow
@@ -454,6 +458,7 @@ function handleBodyKeyDown(event) {
         document.execCommand('insertHTML', false, '&#009');
       }
       break;
+
   }
 }
 
