@@ -139,6 +139,10 @@ func dirHandler(w http.ResponseWriter, r *http.Request) {
 		renderAgendas(w, bf.Bytes())
 		return
 	}
+	if isRaw(r.URL.Path) {
+		r.URL.Path = r.URL.Path[:len(r.URL.Path)-4]
+		name = name[:len(name)-4]
+	}
 	if isDir, err := dirList(w, name); err != nil {
 		addr, _, e := net.SplitHostPort(r.RemoteAddr)
 		if e != nil {
@@ -156,6 +160,10 @@ func dirHandler(w http.ResponseWriter, r *http.Request) {
 func isDoc(path string) bool {
 	_, ok := contentTemplate[filepath.Ext(path)]
 	return ok
+}
+
+func isRaw(path string) bool {
+	return strings.HasSuffix(path, ".raw")
 }
 
 var (
