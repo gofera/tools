@@ -72,3 +72,18 @@ It determines how the formatting actions are rendered.
 {{define "html"}}{{.HTML}}{{end}}
 
 {{define "caption"}}<figcaption>{{style .Text}}</figcaption>{{end}}
+
+{{define "agenda"}}
+{{$self := .}}
+<ul>
+{{range $index, $s := .Lines}}
+<li>
+{{if eq $index $self.Current}}
+<b style="color:deeppink">{{$s.Title}}</b>
+{{else}}
+<a href="javascript:void(0);" onclick="openSlide({{$s.Page}})">{{$s.Title}}</a>
+{{end}}
+</li>
+{{end}}
+</ul>
+{{end}}
