@@ -81,7 +81,7 @@ It determines how the formatting actions are rendered.
 {{if eq $index $self.Current}}
 <b style="color:deeppink">{{$s.Title}}</b>
 {{else}}
-<a href="javascript:void(0);" onclick="openSlide({{$s.Page}})">{{$s.Title}}</a>
+<a href="javascript:void(0);" onclick="openSlide({{$s.Page}} + 1)">{{$s.Title}}</a>
 {{end}}
 </li>
 {{end}}
