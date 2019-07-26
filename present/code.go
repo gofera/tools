@@ -223,7 +223,7 @@ const codeTemplateHTML = `
 {{with .Prefix}}<pre style="display: none"><span>{{printf "%s" .}}</span></pre>{{end}}
 
 <pre class="{{with .Lang}}language-{{.}}{{end}}{{if .Numbers}} line-numbers{{end}}">
-<code {{if .Edit}} contenteditable="true" spellcheck="false"{{end}} class="{{if .Edit}}edit-code{{end}} {{with .Lang}}language-{{.}}{{end}}">{{/*
+<code {{if .Edit}} contenteditable="true" spellcheck="false"{{end}} class="code-playground {{if .Edit}}edit-code{{end}} {{with .Lang}}language-{{.}}{{end}}">{{/*
 	*/}}{{range .Lines}}<span num="{{.N}}">{{/*
 	*/}}{{if .HL}}{{leadingSpace .L}}<b>{{trimSpace .L}}</b>{{/*
 	*/}}{{else}}{{.L}}{{end}}{{/*

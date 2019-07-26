@@ -67,10 +67,8 @@ func Register(name string, parser ParseFunc) {
 
 // Doc represents an entire document.
 type Doc struct {
-	Theme      string
 	Title      string
 	Subtitle   string
-	WideScreen bool
 	Time       time.Time
 	Authors    []Author
 	TitleNotes []string
@@ -78,6 +76,10 @@ type Doc struct {
 	Tags       []string
 	Classes    []string
 	Styles     []string
+
+	Theme      string
+	WideScreen bool
+	Agenda     bool
 }
 
 // Author represents the person who wrote and/or is presenting the document.
@@ -314,6 +316,10 @@ func (ctx *Context) Parse(r io.Reader, name string, mode ParseMode) (*Doc, error
 			}
 			lines.text[i] = ""
 		}
+		if strings.HasPrefix(lines.text[i], ".agenda") {
+			doc.Agenda = true
+			lines.text[i] = ""
+		}
 
 		if isSpeakerNote(lines.text[i]) {
 			doc.TitleNotes = append(doc.TitleNotes, lines.text[i][2:])
@@ -358,7 +364,8 @@ func lesserHeading(text, prefix string) bool {
 // parseSections parses Sections from lines for the section level indicated by
 // number (a nil number indicates the top level).
 func parseSections(ctx *Context, doc *Doc, name string, lines *Lines, number []int) ([]Section, error) {
-	var sections []Section
+	var sections []*Section
+	var agendaSections []*Section
 	for i := 1; ; i++ {
 		// Next non-empty line is title.
 		text, ok := lines.nextNonEmpty()
@@ -474,9 +481,19 @@ func parseSections(ctx *Context, doc *Doc, name string, lines *Lines, number []i
 			section.Styles = append(section.Styles,
 				fmt.Sprintf("background-image: url('%s/static/theme/%s/content.png')", prefix, doc.Theme))
 		}
-		sections = append(sections, section)
+		sections = append(sections, &section)
+		if doc.Agenda && section.Elem == nil && section.Title != "" {
+			agendaSections = append(agendaSections, &section)
+		}
 	}
-	return sections, nil
+	if doc.Agenda {
+		processAgenda(agendaSections)
+	}
+	result := make([]Section, len(sections))
+	for i, v := range sections {
+		result[i] = *v
+	}
+	return result, nil
 }
 
 func parseHeader(doc *Doc, lines *Lines) error {

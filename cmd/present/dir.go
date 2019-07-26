@@ -5,7 +5,6 @@
 package main
 
 import (
-	"bytes"
 	"fmt"
 	"html/template"
 	"io"
@@ -130,13 +129,11 @@ func dirHandler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		bf := bytes.Buffer{}
-		err := renderDoc(&bf, name)
+		err := renderDoc(w, name)
 		if err != nil {
 			log.Println(err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
-		renderAgendas(w, bf.Bytes())
 		return
 	}
 	if isRaw(r.URL.Path) {
