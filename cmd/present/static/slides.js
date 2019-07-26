@@ -416,6 +416,10 @@ function handleBodyKeyDown(event) {
       if (!edit && notesEnabled) toggleNotesWindow();
       break;
     case 72: // 'H' hides the help text
+      if (!edit) {
+        hideHelpText();
+      }
+      break;
     case 27: // escape key
       if (edit) {
         document.activeElement.blur();
