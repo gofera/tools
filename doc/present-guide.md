@@ -2,6 +2,22 @@
 
 ## Feature
 
+### Theme
+
+Add theme in header block (before or after authors)
+
+```
+.theme <theme-name>
+```
+
+Now available themes are
+
+- `asml`
+
+### Agenda
+
+Add `.agenda` in header block
+
 ### Play Code
 
 #### Java
