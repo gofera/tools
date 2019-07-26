@@ -307,6 +307,7 @@ func (ctx *Context) Parse(r io.Reader, name string, mode ParseMode) (*Doc, error
 
 		if strings.HasPrefix(lines.text[i], ".theme") {
 			doc.Theme = strings.TrimSpace(lines.text[i][6:])
+			lines.text[i] = ""
 		}
 
 		if isSpeakerNote(lines.text[i]) {
