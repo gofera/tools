@@ -87,3 +87,10 @@ It determines how the formatting actions are rendered.
 {{end}}
 </ul>
 {{end}}
+
+{{define "echarts"}}
+<div id="echarts{{.Id}}" style="width: {{.Width}}px;height:{{.Height}}px;" class="echarts"></div>
+<script type="text/javascript">
+{{.Script}}
+</script>
+{{end}}
