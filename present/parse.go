@@ -516,7 +516,7 @@ func parseHeader(doc *Doc, lines *Lines) error {
 		doc.Classes = append(doc.Classes, "background")
 		prefix := ""
 		if UrlPrefix != "" {
-			prefix = "/" + UrlPrefix
+			prefix = UrlPrefix
 		}
 		doc.Styles = append(doc.Styles, fmt.Sprintf("background-image: url('%s/static/theme/%s/head.png')", prefix, doc.Theme))
 	}
