@@ -512,6 +512,9 @@ function addEventListeners() {
   var codes = document.getElementsByTagName("code")
   for (var i = 0; i < codes.length; i++) {
     let code = codes[i];
+    if (!code.classList.contains("code-playground")){
+      continue;
+    }
     let pre = code.parentElement
     if (pre) {
       Prism.highlightElement(code, true)
