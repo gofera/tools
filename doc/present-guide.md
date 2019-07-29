@@ -67,3 +67,9 @@ $$
 ### PlantUML
 
 `.uml <file-path>`
+
+### ECharts
+
+`.echarts <file-path> [<height> <width>]`
+
+The file is a js script that defined a ECharts option named `option`

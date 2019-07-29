@@ -384,6 +384,10 @@ code {
   -moz-tab-size: 2.2em;
 }
 
+.echarts {
+  margin: 20px;
+}
+
 [contenteditable="true"]:focus {
   outline: none;
 }
