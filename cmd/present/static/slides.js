@@ -427,9 +427,15 @@ function handleBodyKeyDown(event) {
         hideHelpText();
       }
       break;
-
-    case 39: // right arrow
     case 13: // Enter
+      if(edit){
+        if(event.shiftKey){ // run code
+          event.target.parentElement.parentElement["runCode"]();
+          event.preventDefault();
+        }
+        break;
+      }
+    case 39: // right arrow
     case 32: // space
       if (edit) break;
     case 34: // PgDn
@@ -462,7 +468,6 @@ function handleBodyKeyDown(event) {
         document.execCommand('insertHTML', false, '&#009');
       }
       break;
-
   }
 }
 

@@ -105,6 +105,9 @@ function initPlayground(transport) {
 		output.appendChild(outpre);
 		output.style.display = 'none';
 		code.parentNode.insertBefore(output, button.nextSibling);
+		code["runCode"] = function () {
+			onRun({})
+		}
 	}
 
 	var play = document.querySelectorAll('div.playground');
