@@ -667,10 +667,11 @@ function setupNotesSync() {
   function setupPlayResizeSync() {
     var out = document.getElementsByClassName('output');
     for (var i = 0; i < out.length; i++) {
-      $(out[i]).bind('resize', function(event) {
+      let o = out[i];
+      $(o).bind('resize', function(event) {
         if ($(event.target).hasClass('ui-resizable')) {
           localStorage.setItem('play-index', i);
-          localStorage.setItem('output-style', out[i].style.cssText);
+          localStorage.setItem('output-style', o.style.cssText);
         }
       })
     }
