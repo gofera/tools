@@ -105,7 +105,7 @@ function initPlayground(transport) {
 		output.appendChild(outpre);
 		output.style.display = 'none';
 		code.parentNode.insertBefore(output, button.nextSibling);
-		code["runCode"] = function () {
+		code.runCode = function () {
 			onRun({})
 		}
 	}

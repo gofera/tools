@@ -430,7 +430,7 @@ function handleBodyKeyDown(event) {
     case 13: // Enter
       if(edit){
         if(event.shiftKey){ // run code
-          event.target.parentElement.parentElement["runCode"]();
+          event.target.parentElement.parentElement.runCode();
           event.preventDefault();
         }
         break;
