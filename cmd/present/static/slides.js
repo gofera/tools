@@ -427,9 +427,15 @@ function handleBodyKeyDown(event) {
         hideHelpText();
       }
       break;
-
-    case 39: // right arrow
     case 13: // Enter
+      if(edit){
+        if(event.shiftKey){ // run code
+          event.target.parentElement.parentElement.runCode();
+          event.preventDefault();
+        }
+        break;
+      }
+    case 39: // right arrow
     case 32: // space
       if (edit) break;
     case 34: // PgDn
@@ -462,7 +468,6 @@ function handleBodyKeyDown(event) {
         document.execCommand('insertHTML', false, '&#009');
       }
       break;
-
   }
 }
 
@@ -667,10 +672,11 @@ function setupNotesSync() {
   function setupPlayResizeSync() {
     var out = document.getElementsByClassName('output');
     for (var i = 0; i < out.length; i++) {
-      $(out[i]).bind('resize', function(event) {
+      let o = out[i];
+      $(o).bind('resize', function(event) {
         if ($(event.target).hasClass('ui-resizable')) {
           localStorage.setItem('play-index', i);
-          localStorage.setItem('output-style', out[i].style.cssText);
+          localStorage.setItem('output-style', o.style.cssText);
         }
       })
     }
