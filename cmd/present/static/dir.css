@@ -167,6 +167,7 @@ div#menu {
 	min-width: 590px;
 	padding: 10px 0;
 	text-align: right;
+	margin: 15px;
 }
 div#menu > a {
 	margin-right: 5px;
