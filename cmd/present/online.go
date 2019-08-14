@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"net/url"
 	"path"
+	"path/filepath"
 )
 
 func init() {
@@ -78,6 +79,7 @@ func findPath(u *url.URL) *url.URL {
 func onlineRenderDoc(w io.Writer, u *url.URL, content []byte) error {
 	fmt.Println(u.Path, u.User, u.ForceQuery, u.Fragment, u.Host, u.Opaque, u.RawPath, u.Scheme)
 	ctx := present.Context{ReadFile: func(path string) (i []byte, e error) {
+		path = filepath.ToSlash(path)
 		nu := url.URL{
 			Path:       path,
 			Scheme:     u.Scheme,
