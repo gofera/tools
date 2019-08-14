@@ -11,7 +11,7 @@ func init() {
 }
 
 type UML struct {
-	File string
+	Content []byte
 }
 
 func (i UML) TemplateName() string { return "uml" }
@@ -22,5 +22,9 @@ func parseUML(ctx *Context, fileName string, lineno int, text string) (elem Elem
 		return nil, errors.New("Must provide uml file path")
 	}
 	file := filepath.ToSlash(filepath.Join(filepath.Dir(fileName), args[1]))
-	return UML{File: file}, nil
+	bytes, err := ctx.ReadFile(file)
+	if err != nil {
+		return nil, err
+	}
+	return UML{Content: bytes}, nil
 }
