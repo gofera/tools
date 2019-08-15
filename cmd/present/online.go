@@ -13,8 +13,11 @@ import (
 	"path/filepath"
 )
 
-func init() {
-	http.HandleFunc("/slide/online/", onlineHandler)
+var onlinePrefix = "/online/"
+
+func InitOnline() {
+	onlinePrefix = *urlPrefix + onlinePrefix
+	http.HandleFunc(onlinePrefix, onlineHandler)
 }
 
 func onlineHandler(writer http.ResponseWriter, request *http.Request) {
@@ -57,7 +60,7 @@ func onlineResource(writer http.ResponseWriter, request *http.Request, refer str
 		http.Error(writer, "Bad Referer: The parameter 'path' must be correctly provided", http.StatusBadRequest)
 		return
 	}
-	u.Path = path.Join(path.Dir(u.Path), request.URL.Path[len("/slide/online/"):])
+	u.Path = path.Join(path.Dir(u.Path), request.URL.Path[len(onlinePrefix):])
 	http.Redirect(writer, request, u.String(), http.StatusMovedPermanently)
 }
 
