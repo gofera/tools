@@ -105,14 +105,21 @@ func onlineRenderDoc(w io.Writer, u *url.URL, content []byte) error {
 }
 
 func getContent(u *url.URL) ([]byte, error) {
-	resp, err := http.Get(u.String())
-	if err != nil {
-		return nil, err
+	switch u.Scheme {
+	case "http", "https":
+		resp, err := http.Get(u.String())
+		if err != nil {
+			return nil, err
+		}
+		defer resp.Body.Close()
+		body, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			return nil, err
+		}
+		return body, nil
+	case "file":
+		return ioutil.ReadFile(u.String()[len("file://"):])
+	default:
+		return nil, fmt.Errorf("Unknown scheme: %s", u.Scheme)
 	}
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-	return body, nil
 }
