@@ -6,7 +6,6 @@ import (
 	"golang.org/x/tools/present"
 	"io"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"net/url"
 	"path"
@@ -43,7 +42,6 @@ func onlineRender(writer http.ResponseWriter, request *http.Request, onlinePath 
 	}
 	err = onlineRenderDoc(writer, onlinePath, content)
 	if err != nil {
-		log.Println(err)
 		http.Error(writer, err.Error(), http.StatusInternalServerError)
 	}
 	return
@@ -61,7 +59,11 @@ func onlineResource(writer http.ResponseWriter, request *http.Request, refer str
 		return
 	}
 	u.Path = path.Join(path.Dir(u.Path), request.URL.Path[len(onlinePrefix):])
-	http.Redirect(writer, request, u.String(), http.StatusMovedPermanently)
+	if u.Scheme == "file" {
+		http.ServeFile(writer, request, u.String()[len("file://"):])
+	} else {
+		http.Redirect(writer, request, u.String(), http.StatusMovedPermanently)
+	}
 }
 
 func findPath(u *url.URL) *url.URL {
@@ -80,7 +82,6 @@ func findPath(u *url.URL) *url.URL {
 }
 
 func onlineRenderDoc(w io.Writer, u *url.URL, content []byte) error {
-	fmt.Println(u.Path, u.User, u.ForceQuery, u.Fragment, u.Host, u.Opaque, u.RawPath, u.Scheme)
 	ctx := present.Context{ReadFile: func(path string) (i []byte, e error) {
 		path = filepath.ToSlash(path)
 		nu := url.URL{
