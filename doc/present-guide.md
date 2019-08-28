@@ -66,7 +66,9 @@ $$
 
 ### PlantUML
 
-`.uml <file-path>`
+`.uml [-scroll] [-width <integer unit px>] [-height <integer unit px>] [-style <css string without space>] <file-path>`
+
+if `-style` is specified, `-scroll`, `-width` and `-height` will be skipped.
 
 ### ECharts
 
