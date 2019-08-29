@@ -29,12 +29,36 @@ var (
 	usePlayground = flag.Bool("use_playground", false, "run code snippets using play.golang.org; if false, run them locally and deliver results by WebSocket transport")
 	nativeClient  = flag.Bool("nacl", false, "use Native Client environment playground (prevents non-Go code execution) when using local WebSocket transport")
 	urlPrefix     = flag.String("urlprefix", "", "url prefix, if show in https://tramweb/ppt, the value should be ppt")
+	logPath       = flag.String("log", "", "log path, default: stderr")
 )
+
+func initLog() (closer func() error, err error) {
+	log.SetFlags(log.LstdFlags | log.Lshortfile)
+	if *logPath == "" {
+		return
+	}
+	w, err := os.OpenFile(*logPath, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0644)
+	if err != nil {
+		return
+	}
+	log.SetOutput(w)
+	closer = w.Close
+	return
+}
 
 func main() {
 	flag.BoolVar(&present.PlayEnabled, "play", true, "enable playground (permit execution of arbitrary user code)")
 	flag.BoolVar(&present.NotesEnabled, "notes", true, "enable presenter notes (press 'N' from the browser to display them)")
 	flag.Parse()
+
+	closeLogFile, err := initLog()
+	if err != nil {
+		log.Fatalf("fail to init log %s, reason: %s", *logPath, err)
+	}
+	if closeLogFile != nil {
+		defer closeLogFile()
+	}
+
 	if len(*urlPrefix) > 0 && (*urlPrefix)[0] != '/' {
 		*urlPrefix = "/" + *urlPrefix
 	}
@@ -68,7 +92,7 @@ func main() {
 
 	umlJarPath = filepath.Join(*basePath, "lib/plantuml.jar")
 
-	err := initTemplates(*basePath)
+	err = initTemplates(*basePath)
 	if err != nil {
 		log.Fatalf("Failed to parse templates: %v", err)
 	}
