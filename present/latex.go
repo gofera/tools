@@ -30,7 +30,7 @@ func parseLatex(ctx *Context, fileName string, lineno int, text string) (elem El
 	if err != nil {
 		return nil, err
 	}
-	if len(args) == 1 {
+	if len(args) == 2 {
 		return Latex{Content: string(bs)}, nil
 	} else {
 		part := args[2]
