@@ -63,7 +63,7 @@ func main() {
 		*urlPrefix = "/" + *urlPrefix
 	}
 	present.UrlPrefix = *urlPrefix
-
+	InitOnline()
 	if os.Getenv("GAE_ENV") == "standard" {
 		log.Print("Configuring for App Engine Standard")
 		port := os.Getenv("PORT")

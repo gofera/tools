@@ -16,6 +16,7 @@ import (
 	"net/url"
 	"regexp"
 	"strings"
+	"sync"
 	"time"
 	"unicode"
 	"unicode/utf8"
@@ -177,6 +178,15 @@ type Elem interface {
 	TemplateName() string
 }
 
+type ElemStub struct {
+	text string
+	elem Elem
+}
+
+func (e *ElemStub) TemplateName() string {
+	panic("stub can't be render")
+}
+
 // renderElem implements the elem template function, used to render
 // sub-templates.
 func renderElem(t *template.Template, e Elem) (template.HTML, error) {
@@ -285,6 +295,8 @@ func (l *Lines) nextNonEmpty() (text string, ok bool) {
 type Context struct {
 	// ReadFile reads the file named by filename and returns the contents.
 	ReadFile func(filename string) ([]byte, error)
+	wg       sync.WaitGroup
+	err      error
 }
 
 // ParseMode represents flags for the Parse function.
@@ -297,6 +309,7 @@ const (
 
 // Parse parses a document from r.
 func (ctx *Context) Parse(r io.Reader, name string, mode ParseMode) (*Doc, error) {
+	ctx.wg = sync.WaitGroup{}
 	doc := new(Doc)
 	doc.WideScreen = true
 	lines, err := readLines(r)
@@ -341,6 +354,14 @@ func (ctx *Context) Parse(r io.Reader, name string, mode ParseMode) (*Doc, error
 	// Sections
 	if doc.Sections, err = parseSections(ctx, doc, name, lines, []int{}); err != nil {
 		return nil, err
+	}
+	ctx.wg.Wait()
+	for _, s := range doc.Sections {
+		for i, e := range s.Elem {
+			if t, ok := e.(*ElemStub); ok {
+				s.Elem[i] = t.elem
+			}
+		}
 	}
 	return doc, nil
 }
@@ -442,11 +463,18 @@ func parseSections(ctx *Context, doc *Doc, name string, lines *Lines, number []i
 				if parser == nil {
 					return nil, fmt.Errorf("%s:%d: unknown command %q\n", name, lines.line, text)
 				}
-				t, err := parser(ctx, name, lines.line, text)
-				if err != nil {
-					return nil, err
-				}
-				e = t
+				ctx.wg.Add(1)
+				ptr := &ElemStub{text: text}
+				go func(ctx *Context, name string, line int, text string, ptr *ElemStub) {
+					elem, err := parser(ctx, name, line, text)
+					if err != nil {
+						ctx.err = err
+					} else {
+						ptr.elem = elem
+					}
+					ctx.wg.Done()
+				}(ctx, name, lines.line, text, ptr)
+				e = ptr
 			default:
 				var l []string
 				for ok && strings.TrimSpace(text) != "" {

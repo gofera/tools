@@ -3,7 +3,6 @@ package present
 import (
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"path/filepath"
 	"strings"
 )
@@ -26,7 +25,7 @@ func parseGraphivz(ctx *Context, fileName string, lineno int, text string) (elem
 		return nil, errors.New("Must provide Graphivz file path")
 	}
 	file := filepath.ToSlash(filepath.Join(filepath.Dir(fileName), args[1]))
-	bytes, err := ioutil.ReadFile(file)
+	bytes, err := ctx.ReadFile(file)
 	if err != nil {
 		return nil, err
 	}

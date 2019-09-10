@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"html/template"
-	"io/ioutil"
 	"path/filepath"
 	"strings"
 )
@@ -47,7 +46,7 @@ func parseECharts(ctx *Context, fileName string, lineno int, text string) (elem 
 	}
 
 	file := filepath.ToSlash(filepath.Join(filepath.Dir(fileName), args[1]))
-	bytes, err := ioutil.ReadFile(file)
+	bytes, err := ctx.ReadFile(file)
 	if err != nil {
 		return nil, err
 	}

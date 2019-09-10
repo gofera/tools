@@ -14,13 +14,13 @@ func init() {
 }
 
 type UML struct {
-	File  string
-	Style template.HTMLAttr
+	Content []byte
+	Style   template.HTMLAttr
 }
 
 func (u UML) TemplateName() string { return "uml" }
 
-func (u *UML) parse(slideFilePath string, args []string) error {
+func (u *UML) parse(ctx *Context, slideFilePath string, args []string) error {
 	fs := flag.NewFlagSet("", flag.ExitOnError)
 	style := fs.String("style", "", "CSS Style")
 	width := fs.Int("width", 0, "Width (unit: px)")
@@ -52,8 +52,12 @@ func (u *UML) parse(slideFilePath string, args []string) error {
 			*style = fmt.Sprintf(`style="%s"`, strings.Join(styles, ";"))
 		}
 	}
-
-	u.File = filepath.ToSlash(filepath.Join(filepath.Dir(slideFilePath), umlFile))
+	file := filepath.ToSlash(filepath.Join(filepath.Dir(slideFilePath), umlFile))
+	bytes, err := ctx.ReadFile(file)
+	if err != nil {
+		return err
+	}
+	u.Content = bytes
 	u.Style = template.HTMLAttr(*style)
 	return nil
 }
@@ -61,7 +65,7 @@ func (u *UML) parse(slideFilePath string, args []string) error {
 func parseUML(ctx *Context, fileName string, lineno int, text string) (elem Elem, e error) {
 	args := strings.Fields(text)[1:] // a[0] is ".uml", so skip it
 	uml := UML{}
-	e = uml.parse(fileName, args)
+	e = uml.parse(ctx, fileName, args)
 	if e == nil {
 		elem = uml
 	}

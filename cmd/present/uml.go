@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"html/template"
 	"io"
 	"io/ioutil"
@@ -11,26 +12,21 @@ import (
 
 var umlJarPath string
 
-func genUML(originFile string) template.HTML {
-	if result, err := genUML0(originFile); err == nil {
+func genUML(content []byte) template.HTML {
+	if result, err := genUML0(content); err == nil {
 		return template.HTML(result)
 	} else {
 		return template.HTML("Fail to render uml: " + err.Error())
 	}
 }
-func genUML0(originFile string) (string, error) {
-	reader, err := os.Open(originFile)
-	if err != nil {
-		return "", err
-	}
-
+func genUML0(content []byte) (string, error) {
 	tmpDir := os.TempDir()
 	file, err := ioutil.TempFile(tmpDir, "uml-*.txt")
 	if err != nil {
 		return "", err
 	}
 	filePath := file.Name()
-	_, err = io.Copy(file, reader)
+	_, err = io.Copy(file, bytes.NewReader(content))
 	if err != nil {
 		return "", err
 	}
@@ -50,9 +46,9 @@ func genUML0(originFile string) (string, error) {
 	if _, err = os.Stat(svgFilePath); err != nil {
 		return "", err
 	}
-	bytes, err := ioutil.ReadAll(svgFile)
+	bs, err := ioutil.ReadAll(svgFile)
 	if err != nil {
 		return "", err
 	}
-	return string(bytes), nil
+	return string(bs), nil
 }
