@@ -24,6 +24,7 @@ import (
 
 var (
 	parsers = make(map[string]ParseFunc)
+	tools   = make([]ToolFunc, 0)
 	funcs   = template.FuncMap{}
 )
 
@@ -66,6 +67,12 @@ func Register(name string, parser ParseFunc) {
 	parsers["."+name] = parser
 }
 
+type ToolFunc func(doc *Doc) (Tool, error)
+
+func RegisterTool(tool ToolFunc) {
+	tools = append(tools, tool)
+}
+
 // Doc represents an entire document.
 type Doc struct {
 	Title      string
@@ -77,10 +84,15 @@ type Doc struct {
 	Tags       []string
 	Classes    []string
 	Styles     []string
+	Tools      []Tool
 
 	Theme      string
 	WideScreen bool
 	Agenda     bool
+}
+
+type Tool struct {
+	Elem
 }
 
 // Author represents the person who wrote and/or is presenting the document.
