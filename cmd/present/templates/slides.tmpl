@@ -85,6 +85,11 @@
       </article>
 
     </section>
+    <div id="tools">
+        {{range .Tools}}
+        {{elem $.Template .}}
+        {{end}}
+    </div>
 
     <div id="help">
       Use the left and right arrow keys or click the left and right

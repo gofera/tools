@@ -2,7 +2,7 @@
   /* Framework */
   html {
     height: 100%;
-    zoom: 125%;
+    zoom: 120%;
   }
 
   body {
@@ -86,6 +86,15 @@
   .slides.layout-widescreen > article:not(.nobackground):not(.biglogo),
   .slides.layout-faux-widescreen > article:not(.nobackground):not(.biglogo) {
     background-position-x: 0, 840px;
+  }
+
+  #tools {
+    z-index: 1001;
+    position: absolute;
+    left: 0;
+    top: 0;
+    margin-left: 5px;
+    margin-top: 5px;
   }
 
   /* Clickable/tappable areas */
@@ -548,4 +557,43 @@ figcaption {
   -o-border-radius: 10px;
   -moz-border-radius: 10px;
   -webkit-border-radius: 10px;
+}
+
+.dropbtn {
+  padding: 5px;
+  cursor: default;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  background-color: #f9f9f9;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 3px 5px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {
+  background-color: #f1f1f1
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown-content ul {
+  margin-top: 5px;
+}
+
+.dropdown-content ul li {
+  margin: 0;
 }
