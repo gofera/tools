@@ -38,8 +38,10 @@ func createAgenda(doc *Doc) Agenda {
 }
 
 func updateAgenda(doc *Doc, agenda Agenda) {
-	for i := range doc.Sections {
-		doc.Sections[i].Elem = append(doc.Sections[i].Elem, agenda.With(i))
-		doc.Sections[i].Title = "Agenda"
+	for i, s := range doc.Sections {
+		if doc.Agenda && s.Elem == nil && s.Title != "" {
+			doc.Sections[i].Elem = append(doc.Sections[i].Elem, agenda.With(i))
+			doc.Sections[i].Title = "Agenda"
+		}
 	}
 }
