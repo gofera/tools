@@ -91,7 +91,7 @@ type Doc struct {
 	Agenda     bool
 }
 
-type Tool struct {
+type Tool interface {
 	Elem
 }
 
@@ -380,6 +380,19 @@ func (ctx *Context) Parse(r io.Reader, name string, mode ParseMode) (*Doc, error
 			}
 		}
 	}
+	// Tools
+	for _, t := range tools {
+		tool, err := t(doc)
+		if err != nil {
+			return nil, err
+		}
+		if tool != nil {
+			doc.Tools = append(doc.Tools, tool)
+		}
+	}
+
+	processAgenda(doc)
+
 	return doc, nil
 }
 
@@ -403,7 +416,6 @@ func lesserHeading(text, prefix string) bool {
 // number (a nil number indicates the top level).
 func parseSections(ctx *Context, doc *Doc, name string, lines *Lines, number []int) ([]Section, error) {
 	var sections []*Section
-	var agendaSections []*Section
 	for i := 1; ; i++ {
 		// Next non-empty line is title.
 		text, ok := lines.nextNonEmpty()
@@ -527,12 +539,6 @@ func parseSections(ctx *Context, doc *Doc, name string, lines *Lines, number []i
 				fmt.Sprintf("background-image: url('%s/static/theme/%s/content.png')", prefix, doc.Theme))
 		}
 		sections = append(sections, &section)
-		if doc.Agenda && section.Elem == nil && section.Title != "" {
-			agendaSections = append(agendaSections, &section)
-		}
-	}
-	if doc.Agenda {
-		processAgenda(agendaSections)
 	}
 	result := make([]Section, len(sections))
 	for i, v := range sections {
