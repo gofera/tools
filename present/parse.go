@@ -203,14 +203,19 @@ func renderElem(t *template.Template, e Elem) (template.HTML, error) {
 // pageNum derives a page number from a section.
 func pageNum(s Section, offset int) int {
 	if len(s.Number) == 0 {
-		return offset
+		return offset - 1
 	}
-	return s.Number[0] + offset
+	return s.Number[0] + offset - 1
+}
+
+func pageCount(doc *Doc) int {
+	return len(doc.Sections)
 }
 
 func init() {
 	funcs["elem"] = renderElem
 	funcs["pagenum"] = pageNum
+	funcs["pageCount"] = pageCount
 }
 
 // execTemplate is a helper to execute a template and return the output as a
