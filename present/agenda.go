@@ -40,7 +40,13 @@ func createAgenda(doc *Doc) Agenda {
 func updateAgenda(doc *Doc, agenda Agenda) {
 	for i, s := range doc.Sections {
 		if doc.Agenda && s.Elem == nil && s.Title != "" {
-			doc.Sections[i].Elem = append(doc.Sections[i].Elem, agenda.With(i))
+			index := 0
+			for j, line := range agenda.Lines {
+				if line.Page == s.Number[0] {
+					index = j
+				}
+			}
+			doc.Sections[i].Elem = append(doc.Sections[i].Elem, agenda.With(index))
 			doc.Sections[i].Title = "Agenda"
 		}
 	}
