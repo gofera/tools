@@ -1,3 +1,11 @@
+/* For Chrome only */
+@media screen and (-webkit-min-device-pixel-ratio:0)
+and (min-resolution:.001dpcm) {
+  html {
+    zoom: 120%;
+  }
+}
+
 @media screen {
   /* Framework */
   html {
