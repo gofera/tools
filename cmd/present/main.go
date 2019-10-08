@@ -7,6 +7,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/sqweek/dialog"
 	"go/build"
 	"log"
 	"net"
@@ -30,6 +31,7 @@ var (
 	nativeClient  = flag.Bool("nacl", false, "use Native Client environment playground (prevents non-Go code execution) when using local WebSocket transport")
 	urlPrefix     = flag.String("urlprefix", "", "url prefix, if show in https://tramweb/ppt, the value should be ppt")
 	logPath       = flag.String("log", "", "log path, default: stderr")
+	preview       = flag.Bool("preview", false, "a preview tray tool will run")
 )
 
 func initLog() (closer func() error, err error) {
@@ -99,6 +101,9 @@ func main() {
 
 	ln, err := net.Listen("tcp", *httpAddr)
 	if err != nil {
+		if *preview {
+			dialog.Message("Fail to Open WebPPT Previewer. It may running now. Error:\n%s", err.Error()).Info()
+		}
 		log.Fatal(err)
 	}
 	defer ln.Close()
@@ -138,7 +143,14 @@ func main() {
 	if present.NotesEnabled {
 		log.Println("Notes are enabled, press 'N' from the browser to display them.")
 	}
-	log.Fatal(http.Serve(ln, nil))
+	if *preview {
+		go startPreview()
+	}
+	err = http.Serve(ln, nil)
+	if err != nil && *preview {
+		dialog.Message("Fail to Open WebPPT Previewer. Error:\n%s", err.Error()).Info()
+	}
+	log.Fatal(err)
 }
 
 func environ(vars ...string) []string {
