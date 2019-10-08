@@ -1,8 +1,8 @@
-package main
+package present_core
 
 import "testing"
 
-func TestRepository(t *testing.T)  {
+func TestRepository(t *testing.T) {
 	v := repository("github.com/corylanou/go-mongo-presentation/presentation.slide")
 	if v != "github.com/corylanou/go-mongo-presentation" {
 		t.Error(v)

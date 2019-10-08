@@ -1,4 +1,4 @@
-package main
+package present_core
 
 import (
 	"bytes"
