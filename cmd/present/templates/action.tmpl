@@ -94,3 +94,17 @@ It determines how the formatting actions are rendered.
 {{.Script}}
 </script>
 {{end}}
+
+{{define "agenda-tool"}}
+<div class="dropdown">
+    <button class="dropbtn">Agenda</button>
+    <div class="dropdown-content">
+        <ul>
+        {{range $index, $s := .Lines}}
+            <li><a href="javascript:void(0);" onclick="openSlide({{$s.Page}} + 1)">{{$s.Title}}</a></li>
+        {{end}}
+        </ul>
+    </div>
+</div>
+{{end}}
+
