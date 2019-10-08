@@ -22,6 +22,8 @@ github.com/gotk3/gotk3/cairo
 github.com/gotk3/gotk3/gdk
 github.com/gotk3/gotk3/glib
 github.com/gotk3/gotk3/pango
+# github.com/otiai10/copy v1.0.2
+github.com/otiai10/copy
 # github.com/oxtoacart/bpool v0.0.0-20190530202638-03653db5a59c
 github.com/oxtoacart/bpool
 # github.com/skratchdot/open-golang v0.0.0-20190402232053-79abb63cd66e
