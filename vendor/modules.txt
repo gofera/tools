@@ -1,5 +1,38 @@
+# github.com/TheTitanrain/w32 v0.0.0-20180517000239-4f5cfb03fabf
+github.com/TheTitanrain/w32
+# github.com/getlantern/context v0.0.0-20190109183933-c447772a6520
+github.com/getlantern/context
+# github.com/getlantern/errors v0.0.0-20190325191628-abdb3e3e36f7
+github.com/getlantern/errors
+# github.com/getlantern/golog v0.0.0-20190830074920-4ef2e798c2d7
+github.com/getlantern/golog
+# github.com/getlantern/hex v0.0.0-20190417191902-c6586a6fe0b7
+github.com/getlantern/hex
+# github.com/getlantern/hidden v0.0.0-20190325191715-f02dbb02be55
+github.com/getlantern/hidden
+# github.com/getlantern/ops v0.0.0-20190325191751-d70cb0d6f85f
+github.com/getlantern/ops
+# github.com/getlantern/systray v0.0.0-20190727060347-6f0e5a3c556c
+github.com/getlantern/systray
+# github.com/go-stack/stack v1.8.0
+github.com/go-stack/stack
+# github.com/gotk3/gotk3 v0.0.0-20190930052053-f6994e9a1558
+github.com/gotk3/gotk3/gtk
+github.com/gotk3/gotk3/cairo
+github.com/gotk3/gotk3/gdk
+github.com/gotk3/gotk3/glib
+github.com/gotk3/gotk3/pango
+# github.com/oxtoacart/bpool v0.0.0-20190530202638-03653db5a59c
+github.com/oxtoacart/bpool
+# github.com/skratchdot/open-golang v0.0.0-20190402232053-79abb63cd66e
+github.com/skratchdot/open-golang/open
+# github.com/sqweek/dialog v0.0.0-20190728103509-6254ed5b0d3c
+github.com/sqweek/dialog
+github.com/sqweek/dialog/cocoa
 # golang.org/x/net v0.0.0-20190311183353-d8887717615a
 golang.org/x/net/html
 golang.org/x/net/html/atom
 golang.org/x/net/context/ctxhttp
 golang.org/x/net/websocket
+# golang.org/x/sys v0.0.0-20190215142949-d0b11bdaac8a
+golang.org/x/sys/windows
