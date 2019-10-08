@@ -24,6 +24,7 @@ import (
 
 var (
 	parsers = make(map[string]ParseFunc)
+	tools   = make([]ToolFunc, 0)
 	funcs   = template.FuncMap{}
 )
 
@@ -66,6 +67,12 @@ func Register(name string, parser ParseFunc) {
 	parsers["."+name] = parser
 }
 
+type ToolFunc func(doc *Doc) (Tool, error)
+
+func RegisterTool(tool ToolFunc) {
+	tools = append(tools, tool)
+}
+
 // Doc represents an entire document.
 type Doc struct {
 	Title      string
@@ -77,10 +84,15 @@ type Doc struct {
 	Tags       []string
 	Classes    []string
 	Styles     []string
+	Tools      []Tool
 
 	Theme      string
 	WideScreen bool
 	Agenda     bool
+}
+
+type Tool interface {
+	Elem
 }
 
 // Author represents the person who wrote and/or is presenting the document.
@@ -203,14 +215,19 @@ func renderElem(t *template.Template, e Elem) (template.HTML, error) {
 // pageNum derives a page number from a section.
 func pageNum(s Section, offset int) int {
 	if len(s.Number) == 0 {
-		return offset
+		return offset - 1
 	}
-	return s.Number[0] + offset
+	return s.Number[0] + offset - 1
+}
+
+func pageCount(doc *Doc) int {
+	return len(doc.Sections)
 }
 
 func init() {
 	funcs["elem"] = renderElem
 	funcs["pagenum"] = pageNum
+	funcs["pageCount"] = pageCount
 }
 
 // execTemplate is a helper to execute a template and return the output as a
@@ -363,6 +380,19 @@ func (ctx *Context) Parse(r io.Reader, name string, mode ParseMode) (*Doc, error
 			}
 		}
 	}
+	// Tools
+	for _, t := range tools {
+		tool, err := t(doc)
+		if err != nil {
+			return nil, err
+		}
+		if tool != nil {
+			doc.Tools = append(doc.Tools, tool)
+		}
+	}
+
+	processAgenda(doc)
+
 	return doc, nil
 }
 
@@ -386,7 +416,6 @@ func lesserHeading(text, prefix string) bool {
 // number (a nil number indicates the top level).
 func parseSections(ctx *Context, doc *Doc, name string, lines *Lines, number []int) ([]Section, error) {
 	var sections []*Section
-	var agendaSections []*Section
 	for i := 1; ; i++ {
 		// Next non-empty line is title.
 		text, ok := lines.nextNonEmpty()
@@ -510,12 +539,6 @@ func parseSections(ctx *Context, doc *Doc, name string, lines *Lines, number []i
 				fmt.Sprintf("background-image: url('%s/static/theme/%s/content.png')", prefix, doc.Theme))
 		}
 		sections = append(sections, &section)
-		if doc.Agenda && section.Elem == nil && section.Title != "" {
-			agendaSections = append(agendaSections, &section)
-		}
-	}
-	if doc.Agenda {
-		processAgenda(agendaSections)
 	}
 	result := make([]Section, len(sections))
 	for i, v := range sections {
