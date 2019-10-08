@@ -42,7 +42,7 @@ func onReady() {
 	openItem := systray.AddMenuItem("Open WebPPT", "")
 	quitItem := systray.AddMenuItem("Quit", "")
 
-	dialog.Message("WebPPT Previewer started.\nGo to tray to open your WebPPT file.").Title("Start").Info()
+	dialog.Message("WebPPT Previewer started.\nGo to tray to open your WebPPT file.\nFor details, you can read README file.").Title("Start").Info()
 
 	for {
 		select {

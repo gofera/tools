@@ -2,3 +2,4 @@ cmd/present/.idea/
 .idea/
 *.exe
 /users/
+output/
