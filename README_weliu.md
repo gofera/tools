@@ -1,4 +1,6 @@
-# build and start server
+# WebPPT
+
+## build and start server
 ```
 -bash-4.1$ pwd
 /h/user/weliu/ppt
@@ -8,3 +10,10 @@ dark_side_go_runtime  scm  talks  users
 -bash-4.1$ present -nacl -play -use_playground
 ```
 
+## Build Previewer
+
+```
+cd cmd/present/preview/package
+go generate main.go
+ls output/
+```
