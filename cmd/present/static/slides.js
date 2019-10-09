@@ -10,6 +10,8 @@ var PM_TOUCH_SENSITIVITY = 15;
 
 var curSlide;
 
+var destSlideKey = "destSlide";
+
 /* ---------------------------------------------------------------------- */
 /* classList polyfill by Eli Grey
  * (http://purl.eligrey.com/github/classList.js/blob/master/classList.js) */
@@ -212,7 +214,7 @@ function prevSlide() {
     updateSlides();
   }
 
-  if (notesEnabled) localStorage.setItem('destSlide', curSlide);
+  if (notesEnabled) localStorage.setItem(destSlideKey, curSlide);
 };
 
 function nextSlide() {
@@ -223,7 +225,7 @@ function nextSlide() {
     updateSlides();
   }
 
-  if (notesEnabled) localStorage.setItem('destSlide', curSlide);
+  if (notesEnabled) localStorage.setItem(destSlideKey, curSlide);
 };
 
 function openSlide(slideNum) {
@@ -233,7 +235,7 @@ function openSlide(slideNum) {
     updateSlides();
   }
 
-  if (notesEnabled) localStorage.setItem('destSlide', curSlide);
+  if (notesEnabled) localStorage.setItem(destSlideKey, curSlide);
 };
 
 /* Slide events */
@@ -605,6 +607,7 @@ function updateGraphivs() {
 }
 
 function handleDomLoaded() {
+  destSlideKey = "destSlide" + window.location.pathname + window.location.search;
   slideEls = document.querySelectorAll('section.slides > article');
 
   setupFrames();
@@ -695,7 +698,7 @@ function setupNotesSync() {
 
   setupPlayCodeSync();
   setupPlayResizeSync();
-  localStorage.setItem('destSlide', curSlide);
+  localStorage.setItem(destSlideKey, curSlide);
   window.addEventListener('storage', updateOtherWindow, false);
 }
 
@@ -710,7 +713,7 @@ function updateOtherWindow(e) {
   var isRemoveStorageEvent = !e.newValue;
   if (isRemoveStorageEvent) return;
 
-  var destSlide = localStorage.getItem('destSlide');
+  var destSlide = localStorage.getItem(destSlideKey);
   while (destSlide > curSlide) {
     nextSlide();
   }
