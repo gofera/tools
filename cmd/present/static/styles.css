@@ -571,6 +571,7 @@ figcaption {
 .dropbtn {
   padding: 5px;
   cursor: default;
+  opacity: 0.3;
 }
 
 .dropdown {
@@ -606,3 +607,11 @@ figcaption {
 .dropdown-content ul li {
   margin: 0;
 }
+
+.gitpullbtn {
+  padding: 5px;
+  opacity: 0.3;
+  cursor: pointer;
+}
+
+html.wait, html.wait * { cursor: wait !important; }

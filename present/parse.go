@@ -89,6 +89,7 @@ type Doc struct {
 	Theme      string
 	WideScreen bool
 	Agenda     bool
+	Path       string
 }
 
 type Tool interface {
@@ -328,6 +329,7 @@ const (
 func (ctx *Context) Parse(r io.Reader, name string, mode ParseMode) (*Doc, error) {
 	ctx.wg = sync.WaitGroup{}
 	doc := new(Doc)
+	doc.Path = name
 	doc.WideScreen = true
 	lines, err := readLines(r)
 	if err != nil {
