@@ -120,6 +120,9 @@
               success: function(data) {
                 $("html").removeClass("wait");
                 alert( data );
+                if (!data.startsWith('Already up-to-date.')) {
+                    window.location.reload(true);
+                }
               }
           });
         });
