@@ -112,3 +112,31 @@ It determines how the formatting actions are rendered.
 <button id="git_pull" type="button" class="gitpullbtn">git pull</button>
 {{end}}
 
+{{define "csv"}}
+<div>
+<table {{.Style}}>
+    <thead>
+    {{range $row := .Headers}}
+        <tr>
+        {{range $cell := $row}}
+            <td>
+                {{$cell}}
+            </td>
+        {{end}}
+        </tr>
+    {{end}}
+    </thead>
+    <tbody>
+    {{range $row := .Records}}
+        <tr>
+        {{range $cell := $row}}
+            <td>
+                {{$cell}}
+            </td>
+        {{end}}
+        </tr>
+    {{end}}
+    </tbody>
+</table>
+</div>
+{{end}}
