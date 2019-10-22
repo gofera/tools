@@ -115,28 +115,24 @@ It determines how the formatting actions are rendered.
 {{define "csv"}}
 <div>
 <table {{.Style}}>
-    <thead>
-    {{range $row := .Headers}}
-        <tr>
-        {{range $cell := $row}}
-            <td>
-                {{$cell}}
-            </td>
-        {{end}}
-        </tr>
+{{range $row := .Headers}}
+    <tr>
+    {{range $cell := $row}}
+        <th>
+            {{$cell}}
+        </th>
     {{end}}
-    </thead>
-    <tbody>
-    {{range $row := .Records}}
-        <tr>
-        {{range $cell := $row}}
-            <td>
-                {{$cell}}
-            </td>
-        {{end}}
-        </tr>
+    </tr>
+{{end}}
+{{range $row := .Records}}
+    <tr>
+    {{range $cell := $row}}
+        <td>
+            {{$cell}}
+        </td>
     {{end}}
-    </tbody>
+    </tr>
+{{end}}
 </table>
 </div>
 {{end}}
