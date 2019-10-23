@@ -611,7 +611,6 @@ figcaption {
 .gitpullbtn {
   padding: 5px;
   opacity: 0.3;
-  cursor: pointer;
 }
 
 html.wait, html.wait * { cursor: wait !important; }
