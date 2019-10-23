@@ -1,9 +1,5 @@
 package present
 
-import (
-	"strings"
-)
-
 type GitPullTool struct {
 
 }
@@ -18,8 +14,7 @@ func init() {
 
 func parseGitPullTool(doc *Doc) (Tool, error) {
 	// fmt.Println("doc.path:", doc.Path)
-	// local path is not started from "users/" prefix
-	if !strings.HasPrefix(doc.Path, "users/") {
+	if !doc.IsBitBucketUserPath() {
 		return nil, nil
 	}
 	tool := GitPullTool{}

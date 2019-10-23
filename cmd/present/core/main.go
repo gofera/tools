@@ -58,7 +58,10 @@ func Start() (run func() error, err error) {
 
 	flag.BoolVar(&present.PlayEnabled, "play", true, "enable playground (permit execution of arbitrary user code)")
 	flag.BoolVar(&present.NotesEnabled, "notes", true, "enable presenter notes (press 'N' from the browser to display them)")
+	flag.StringVar(&present.BitBucketUrl, "bitbucket", "https://git-brion-us.asml.com:8443", "Bit bucket URL")
 	flag.Parse()
+
+	present.BitBucketUrl = strings.TrimRight(present.BitBucketUrl, "/")
 
 	closeLogFile, err := initLog()
 	if err != nil {
