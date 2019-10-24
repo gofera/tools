@@ -113,8 +113,9 @@ It determines how the formatting actions are rendered.
 {{end}}
 
 {{define "csv"}}
-<div>
-<table {{.Style}}>
+<p>
+<div style="overflow-y:auto;max-height:80%;{{.Style}}">
+<table>
 {{range $row := .Headers}}
     <tr>
     {{range $cell := $row}}
@@ -135,4 +136,5 @@ It determines how the formatting actions are rendered.
 {{end}}
 </table>
 </div>
+</p>
 {{end}}

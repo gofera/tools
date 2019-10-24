@@ -5,7 +5,6 @@ import (
 	"encoding/csv"
 	"errors"
 	"flag"
-	"fmt"
 	"html/template"
 	"path/filepath"
 )
@@ -15,7 +14,7 @@ func init() {
 }
 
 type CSV struct {
-	Style   template.HTMLAttr
+	Style   template.CSS
 	Headers [][]string
 	Records [][]string
 }
@@ -36,7 +35,6 @@ func parseTable(ctx *Context, fileName string, lineNumber int, inputLine string)
 	comma := fs.String("comma", ",", "Comma character")
 	comment := fs.String("comment", "#", "Comment character")
 	header := fs.Int("header", 1, "Header line")
-	fs.Usage()
 	err = fs.Parse(args)
 	if err != nil {
 		return nil, err
@@ -72,9 +70,7 @@ func parseTable(ctx *Context, fileName string, lineNumber int, inputLine string)
 	if err != nil {
 		return nil, err
 	}
-	if *style != "" {
-		u.Style = template.HTMLAttr(fmt.Sprintf(`style="%s"`, *style))
-	}
+	u.Style = template.CSS(*style)
 	if *header < 0 || *header > len(records) {
 		return nil, errors.New("Header setting is wrong")
 	}
