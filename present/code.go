@@ -28,6 +28,8 @@ var PlayEnabled = false
 // present user interface.
 var NotesEnabled = false
 
+var BitBucketUrl string
+
 func init() {
 	Register("code", parseCode)
 	Register("play", parseCode)

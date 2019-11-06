@@ -141,6 +141,11 @@ func (s Doc) TitleAttributes() template.HTMLAttr {
 	return template.HTMLAttr(strings.Join([]string{class, style}, " "))
 }
 
+func (d Doc) IsBitBucketUserPath() bool {
+	// local path is not started from "users/" prefix
+	return strings.HasPrefix(d.Path, "users/")
+}
+
 // HTMLAttributes for the section
 func (s Section) HTMLAttributes() template.HTMLAttr {
 	if len(s.Classes) == 0 && len(s.Styles) == 0 {

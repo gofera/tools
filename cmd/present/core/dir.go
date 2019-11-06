@@ -77,7 +77,7 @@ func userRepository(name string) (repoPath, dir string) {
 	if repoName == "" {
 		return
 	}
-	repoPath = fmt.Sprintf("https://git-brion-us.asml.com:8443/scm/~%s/%s.git", user, repoName)
+	repoPath = fmt.Sprintf("%s/scm/~%s/%s.git", present.BitBucketUrl, user, repoName)
 	dir = name[:i] + "/browse"
 	return
 }

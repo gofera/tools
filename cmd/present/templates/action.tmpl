@@ -109,8 +109,13 @@ It determines how the formatting actions are rendered.
 {{end}}
 
 {{define "gitpull-tool"}}
-<button id="git_pull" type="button" class="gitpullbtn">git pull</button>
+<a href="javascript:void(0);" id="git_pull" class="gitpullbtn">Update</a>
 {{end}}
+
+{{define "edit-tool"}}
+<a href="{{.Path}}" target="_blank" class="gitpullbtn">Edit</a>
+{{end}}
+
 
 {{define "csv"}}
 <p>
