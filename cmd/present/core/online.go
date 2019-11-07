@@ -15,7 +15,6 @@ import (
 var onlinePrefix = "/online/"
 
 func InitOnline() {
-	//onlinePrefix = *urlPrefix + onlinePrefix
 	http.HandleFunc(onlinePrefix, onlineHandler)
 }
 
