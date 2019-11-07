@@ -34,11 +34,67 @@ This is `code`
 This is $formula$
 
     formatted
+    lines
 
 - item 1
 - item 2
 - item 3
 
+* Run code
+
+* Run code
+
+# Use play command to show runnable code
+# Add `-edit` flag to enable edit
+# Add `-numbers` flat to show line number
+.play -edit -numbers code/go.go
+
+Try edit the code and run again.
+You can use `SHIFT+ENTER` to quick run when editing.
+
+* Supported Languages
+
+Now we support
+
+- Go
+- Java
+- Python
+- Lua
+- Perl
+- Bash
+
+To make sure WebPPT can correctly run your code, the code file must have correct extension name.
+Or, for script language, you can use shebang flag to specify binary to run the code.
+
+* Play Code
+
+*Go*
+
+.play -edit -numbers code/go.go
+
+*Java*
+
+.play -edit code/java.java
+
+* Play Code
+
+*Lua*
+
+.play -edit code/lua.lua
+
+*Bash*
+
+.play -edit code/bash.sh
+
+*Python*
+
+.play -edit code/python.py
+
+* Play Code
+
+*Python with shebang*
+
+.play -edit -numbers code/python-shebang
 
 * Advanced Commands
 
