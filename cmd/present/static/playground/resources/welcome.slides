@@ -1,0 +1,45 @@
+# Header block
+Welcome to WebPPT
+Playground for Beginner
+7 Nov 2019
+Tags: Guide
+
+# Empty line to end header part
+# Following is author block(s)
+Wenzhe Liu
+wen-zhe.liu@asml.com
+
+Dean Xu
+dean.xu@asml.com
+XDean@github.com
+
+# There are some options for the page, try comment out them
+.theme asml
+.agenda
+
+# Now you can write your slides
+# Use * to start a new page, and a blank line after it
+* Basic Usage
+
+# A blank page will render to title page. If you enable agenda, it will show as agenda page.
+
+* Basic Usage
+
+*bold font*
+
+_italic font_
+
+This is `code`
+
+This is $formula$
+
+    formatted
+
+- item 1
+- item 2
+- item 3
+
+
+* Advanced Commands
+
+* FAQ

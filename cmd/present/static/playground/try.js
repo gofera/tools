@@ -33,8 +33,16 @@ function submitTryIt() {
 
 document.addEventListener('DOMContentLoaded', function () {
   let savedText = window.localStorage.getItem(saveKey);
-  if (savedText != null) {
+  if (savedText == null || savedText === "") {
+    fetch("resources/welcome.slides")
+      .then(res => {
+        res.text().then(body => {
+          document.getElementById("textareaCode").value = body;
+          submitTryIt();
+        })
+      })
+  } else {
     document.getElementById("textareaCode").value = savedText;
+    submitTryIt();
   }
-  submitTryIt();
 }, false);
