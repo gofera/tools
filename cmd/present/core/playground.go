@@ -39,7 +39,7 @@ func playgroundRunHandler(writer http.ResponseWriter, request *http.Request) {
 				http.Error(writer, "Bad Referer: "+err.Error(), http.StatusBadRequest)
 				return
 			}
-			builtin, _ := url.Parse("resources")
+			builtin, _ := url.Parse("resources/")
 			u = origin.ResolveReference(builtin)
 		} else {
 			http.Error(writer, "The parameter 'path' must be correctly provided", http.StatusBadRequest)
@@ -66,16 +66,19 @@ func playgroundRunHandler(writer http.ResponseWriter, request *http.Request) {
 		}
 		return getContent(&nu)
 	}}
-	doc, err := ctx.Parse(bytes.NewReader(content), u.Path, 0)
+	doc, err := ctx.Parse(bytes.NewReader(content), u.Path+"/index.slides", 0)
 	if err != nil {
 		http.Error(writer, err.Error(), http.StatusBadRequest)
 		return
 	}
 	tmpl := contentTemplate[".slide"]
 
-	err = doc.Render(writer, tmpl)
+	buffer := &bytes.Buffer{}
+	err = doc.Render(buffer, tmpl)
 	if err != nil {
 		http.Error(writer, err.Error(), http.StatusBadRequest)
+	} else {
+		_, _ = writer.Write(buffer.Bytes())
 	}
 	return
 }
