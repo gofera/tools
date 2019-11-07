@@ -1,4 +1,4 @@
-submitTryIt();
+const saveKey = "playground-save-text";
 
 function submitTryIt() {
 
@@ -6,7 +6,7 @@ function submitTryIt() {
   mask.style.display = "block";
 
   var text = document.getElementById("textareaCode").value;
-
+  window.localStorage.setItem(saveKey, text)
   fetch("run", {
     method: "POST",
     body: text,
@@ -30,3 +30,11 @@ function submitTryIt() {
     });
   })
 }
+
+document.addEventListener('DOMContentLoaded', function () {
+  let savedText = window.localStorage.getItem(saveKey);
+  if (savedText != null) {
+    document.getElementById("textareaCode").value = savedText;
+  }
+  submitTryIt();
+}, false);
