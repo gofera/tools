@@ -32,19 +32,8 @@ func playgroundPageHandler(writer http.ResponseWriter, request *http.Request) {
 func playgroundRunHandler(writer http.ResponseWriter, request *http.Request) {
 	u := findPath(request.URL)
 	if u == nil {
-		referer := request.Header.Get("Referer")
-		if referer != "" {
-			origin, err := url.Parse(referer)
-			if err != nil {
-				http.Error(writer, "Bad Referer: "+err.Error(), http.StatusBadRequest)
-				return
-			}
-			builtin, _ := url.Parse("resources/")
-			u = origin.ResolveReference(builtin)
-		} else {
-			http.Error(writer, "The parameter 'path' must be correctly provided", http.StatusBadRequest)
-			return
-		}
+		http.Error(writer, "The parameter 'path' must be correctly provided", http.StatusBadRequest)
+		return
 	}
 
 	content, err := ioutil.ReadAll(request.Body)

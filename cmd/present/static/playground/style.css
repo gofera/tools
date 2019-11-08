@@ -42,6 +42,7 @@ a {
     float: left;
     padding: 10px 15px;
     min-width: 245px;
+    width: calc(100% - 400px);
 }
 
 #controls > input {
@@ -159,4 +160,17 @@ input[type=button],
     position: absolute;
     height: 100%;
     z-index: 4;
+}
+
+#resources-path {
+    max-width: 600px;
+    min-width: 300px;
+    width: calc(70% - 200px);
+    height: 30px;
+    border: 1px solid #375EAB;
+    font-size: 16px;
+    font-family: sans-serif;
+    position: static;
+    top: 1px;
+    border-radius: 5px;
 }

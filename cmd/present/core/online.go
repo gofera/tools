@@ -116,6 +116,9 @@ func getContent(u *url.URL) ([]byte, error) {
 		if err != nil {
 			return nil, err
 		}
+		if resp.StatusCode >= 300 {
+			return nil, fmt.Errorf("Resource not found (%s): %s", u.String(), body)
+		}
 		return body, nil
 	case "file":
 		return ioutil.ReadFile(u.String()[len("file://"):])

@@ -1,4 +1,5 @@
-const saveKey = "playground-save-text";
+const saveTextKey = "playground-save-text";
+const saveUrlKey = "playground-save-url";
 
 function submitTryIt() {
 
@@ -6,10 +7,13 @@ function submitTryIt() {
   mask.style.display = "block";
 
   var text = document.getElementById("textareaCode").value;
-  window.localStorage.setItem(saveKey, text)
-  fetch("run", {
+  var url = document.getElementById("resources-path").value;
+
+  window.localStorage.setItem(saveTextKey, text)
+  fetch("run?path=" + url, {
     method: "POST",
     body: text,
+
   }).then(res => {
     res.text().then(txt => {
       let ifr = document.createElement("iframe");
@@ -32,9 +36,14 @@ function submitTryIt() {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-  let savedText = window.localStorage.getItem(saveKey);
+  let savedURL = window.localStorage.getItem(saveUrlKey);
+  if (savedURL == null || savedURL === "") {
+    savedURL = window.location.href + "welcome";
+  }
+  document.getElementById("resources-path").value = savedURL;
+  let savedText = window.localStorage.getItem(saveTextKey);
   if (savedText == null || savedText === "") {
-    fetch("resources/welcome.slides")
+    fetch("welcome/index.slides")
       .then(res => {
         res.text().then(body => {
           document.getElementById("textareaCode").value = body;
