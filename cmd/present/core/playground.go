@@ -22,11 +22,7 @@ func playgroundPageHandler(writer http.ResponseWriter, request *http.Request) {
 	if strings.HasPrefix(suffix, "/") {
 		suffix = suffix[1:]
 	}
-	if suffix == "" {
-		http.ServeFile(writer, request, filepath.Join(*basePath, "static/playground/index.html"))
-	} else {
-		http.ServeFile(writer, request, filepath.Join(*basePath, "static/playground/"+suffix))
-	}
+	http.ServeFile(writer, request, filepath.Join(*basePath, "static/playground/"+suffix))
 }
 
 func playgroundRunHandler(writer http.ResponseWriter, request *http.Request) {
@@ -35,26 +31,32 @@ func playgroundRunHandler(writer http.ResponseWriter, request *http.Request) {
 		http.Error(writer, "The parameter 'path' must be correctly provided", http.StatusBadRequest)
 		return
 	}
+	resourcePath := u.String()
 
 	content, err := ioutil.ReadAll(request.Body)
 	if err != nil {
 		http.Error(writer, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	ctx := present.Context{ReadFile: func(path string) (i []byte, e error) {
-		path = filepath.ToSlash(path)
-		nu := url.URL{
-			Path:       path,
-			Scheme:     u.Scheme,
-			Host:       u.Host,
-			RawQuery:   u.RawQuery,
-			ForceQuery: u.ForceQuery,
-			Opaque:     u.Opaque,
-			User:       u.User,
-			Fragment:   u.Fragment,
-		}
-		return getContent(&nu)
-	}}
+	ctx := present.Context{
+		ReadFile: func(path string) (i []byte, e error) {
+			path = filepath.ToSlash(path)
+			nu := url.URL{
+				Path:       path,
+				Scheme:     u.Scheme,
+				Host:       u.Host,
+				RawQuery:   u.RawQuery,
+				ForceQuery: u.ForceQuery,
+				Opaque:     u.Opaque,
+				User:       u.User,
+				Fragment:   u.Fragment,
+			}
+			return getContent(&nu)
+		},
+		AbsPath: func(filename string) string {
+			return filepath.ToSlash(filepath.Join(resourcePath, filename))
+		},
+	}
 	doc, err := ctx.Parse(bytes.NewReader(content), u.Path+"/index.slides", 0)
 	if err != nil {
 		http.Error(writer, err.Error(), http.StatusBadRequest)

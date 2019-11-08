@@ -81,20 +81,25 @@ func findPath(u *url.URL) *url.URL {
 }
 
 func onlineRenderDoc(w io.Writer, u *url.URL, content []byte) error {
-	ctx := present.Context{ReadFile: func(path string) (i []byte, e error) {
-		path = filepath.ToSlash(path)
-		nu := url.URL{
-			Path:       path,
-			Scheme:     u.Scheme,
-			Host:       u.Host,
-			RawQuery:   u.RawQuery,
-			ForceQuery: u.ForceQuery,
-			Opaque:     u.Opaque,
-			User:       u.User,
-			Fragment:   u.Fragment,
-		}
-		return getContent(&nu)
-	}}
+	ctx := present.Context{
+		ReadFile: func(path string) (i []byte, e error) {
+			path = filepath.ToSlash(path)
+			nu := url.URL{
+				Path:       path,
+				Scheme:     u.Scheme,
+				Host:       u.Host,
+				RawQuery:   u.RawQuery,
+				ForceQuery: u.ForceQuery,
+				Opaque:     u.Opaque,
+				User:       u.User,
+				Fragment:   u.Fragment,
+			}
+			return getContent(&nu)
+		},
+		AbsPath: func(filename string) string {
+			return filename
+		},
+	}
 	doc, err := ctx.Parse(bytes.NewReader(content), u.Path, 0)
 	if err != nil {
 		return err

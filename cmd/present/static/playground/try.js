@@ -9,7 +9,8 @@ function submitTryIt() {
   var text = document.getElementById("textareaCode").value;
   var url = document.getElementById("resources-path").value;
 
-  window.localStorage.setItem(saveTextKey, text)
+  window.localStorage.setItem(saveTextKey, text);
+  window.localStorage.setItem(saveUrlKey, url);
   fetch("run?path=" + url, {
     method: "POST",
     body: text,
