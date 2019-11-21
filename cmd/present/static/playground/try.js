@@ -8,6 +8,12 @@ function submitTryIt() {
 
   var text = document.getElementById("textareaCode").value;
   var url = document.getElementById("resources-path").value;
+  var oldIframe = document.getElementById("iframeResult");
+  var page;
+  if (oldIframe){
+    let ifrw = (oldIframe.contentWindow) ? oldIframe.contentWindow : (oldIframe.contentDocument.document) ? oldIframe.contentDocument.document : oldIframe.contentDocument;
+    page = ifrw.curSlide + 1;
+  }
 
   window.localStorage.setItem(saveTextKey, text);
   window.localStorage.setItem(saveUrlKey, url);
@@ -28,6 +34,9 @@ function submitTryIt() {
 
       let ifrw = (ifr.contentWindow) ? ifr.contentWindow : (ifr.contentDocument.document) ? ifr.contentDocument.document : ifr.contentDocument;
       ifrw.document.open();
+      if (page){
+        ifrw.location.hash="#"+page;
+      }
       ifrw.document.write(txt);
       ifrw.document.close();
 

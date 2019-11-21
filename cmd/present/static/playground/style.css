@@ -49,7 +49,7 @@ a {
     border-radius: 5px;
 }
 
-#aboutControls {
+#headButtons {
     float: right;
     padding: 10px 15px;
 }
@@ -93,7 +93,6 @@ input[type=button],
 #textarea, #iframe {
     height: 100%;
     width: 100%;
-    padding-bottom: 10px;
     padding-top: 1px;
 }
 

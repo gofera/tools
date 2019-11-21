@@ -137,8 +137,10 @@ if (objCtr.defineProperty) {
 /* Slide movement */
 
 function hideHelpText() {
-  document.getElementById('help').style.display = 'none';
-};
+  let elem = document.getElementById('help');
+  if (elem)
+    elem.style.display = 'none';
+}
 
 function getSlideEl(no) {
   if ((no < 0) || (no >= slideEls.length)) {
