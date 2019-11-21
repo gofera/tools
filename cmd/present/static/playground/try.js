@@ -2,6 +2,8 @@ const saveTextKey = "playground-save-text";
 const saveUrlKey = "playground-save-url";
 
 var welcomePageText = "";
+var welcomeUrl = window.location.href + "welcome";
+
 var helpShown = false;
 
 function submitTryIt() {
@@ -18,8 +20,8 @@ function submitTryIt() {
     page = ifrw.curSlide + 1;
   }
 
-  window.localStorage.setItem(saveTextKey, text);
-  window.localStorage.setItem(saveUrlKey, url);
+  window.localStorage.setItem(saveTextKey, text===welcomePageText?"":text);
+  window.localStorage.setItem(saveUrlKey, url===welcomeUrl?"":url);
   fetch("run?path=" + url, {
     method: "POST",
     body: text,
@@ -66,7 +68,7 @@ function revertWelcomePage() {
 
 function setToWelcomePage() {
   document.getElementById("textareaCode").value = welcomePageText;
-  document.getElementById("resources-path").value = window.location.href + "welcome";
+  document.getElementById("resources-path").value = welcomeUrl;
   submitTryIt();
 }
 
@@ -80,20 +82,21 @@ document.addEventListener('DOMContentLoaded', function () {
 
   let savedURL = window.localStorage.getItem(saveUrlKey);
   if (savedURL == null || savedURL === "") {
-    savedURL = window.location.href + "welcome";
+    savedURL = welcomeUrl;
   }
   document.getElementById("resources-path").value = savedURL;
-  let savedText = window.localStorage.getItem(saveTextKey);
-  if (savedText == null || savedText === "") {
-    fetch("welcome/index.slide")
-      .then(res => {
-        res.text().then(body => {
-          welcomePageText = body;
+
+  fetch("welcome/index.slide")
+    .then(res => {
+      res.text().then(body => {
+        welcomePageText = body;
+        let savedText = window.localStorage.getItem(saveTextKey);
+        if (savedText == null || savedText === "") {
           setToWelcomePage();
-        })
+        } else {
+          document.getElementById("textareaCode").value = savedText;
+          submitTryIt();
+        }
       })
-  } else {
-    document.getElementById("textareaCode").value = savedText;
-    submitTryIt();
-  }
+    })
 }, false);

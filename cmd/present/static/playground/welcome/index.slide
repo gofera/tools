@@ -98,4 +98,18 @@ Or, for script language, you can use shebang flag to specify binary to run the c
 
 * Advanced Commands
 
+* HTML support
+
+You can use `.html` command to include a html file.
+
+.html help.html
+
+* iframe support
+
+You can use `.iframe` command to include a whole website.
+
+`.iframe / 400 1000` (.iframe <url> [<height> <width>]?)
+
+.iframe / 400 1000
+
 * FAQ
