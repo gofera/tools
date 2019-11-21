@@ -173,3 +173,40 @@ input[type=button],
     top: 1px;
     border-radius: 5px;
 }
+
+#helpPane {
+    position: fixed;
+    color: #000000;
+    background: #eeeeee;
+    border: 1px solid #000000;
+    top: 50%;
+    left: 50%;
+
+    height: 500px;
+    width: 700px;
+    margin-top: -250px;
+    margin-left: -350px;
+
+    border-radius: 10px;
+    -o-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+}
+
+#helpButtons {
+    text-align: center;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+#helpButtons > input {
+    margin-left: 20px;
+    margin-right: 20px;
+    width: 100px;
+}
+
+#helpText {
+    margin: 20px;
+}

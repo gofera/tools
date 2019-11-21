@@ -57,7 +57,7 @@ func playgroundRunHandler(writer http.ResponseWriter, request *http.Request) {
 			return filepath.ToSlash(filepath.Join(resourcePath, filename))
 		},
 	}
-	doc, err := ctx.Parse(bytes.NewReader(content), u.Path+"/index.slides", 0)
+	doc, err := ctx.Parse(bytes.NewReader(content), u.Path+"/index.slide", 0)
 	if err != nil {
 		http.Error(writer, err.Error(), http.StatusBadRequest)
 		return
