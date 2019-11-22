@@ -7,6 +7,7 @@ package present
 import (
 	"bufio"
 	"bytes"
+	"encoding/csv"
 	"errors"
 	"fmt"
 	"html/template"
@@ -380,6 +381,9 @@ func (ctx *Context) Parse(r io.Reader, name string, mode ParseMode) (*Doc, error
 		return nil, err
 	}
 	ctx.wg.Wait()
+	if ctx.err != nil {
+		return nil, ctx.err
+	}
 	for _, s := range doc.Sections {
 		for i, e := range s.Elem {
 			if t, ok := e.(*ElemStub); ok {
@@ -688,4 +692,14 @@ func parseTime(text string) (t time.Time, ok bool) {
 
 func isSpeakerNote(s string) bool {
 	return strings.HasPrefix(s, ": ")
+}
+
+func parseArgsWithQuote(s string) ([]string, error) {
+	r := csv.NewReader(strings.NewReader(s))
+	r.Comma = ' '
+	fields, err := r.Read()
+	if err != nil {
+		return nil, err
+	}
+	return fields, nil
 }

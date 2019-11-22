@@ -115,3 +115,31 @@ It determines how the formatting actions are rendered.
 {{define "edit-tool"}}
 <a href="{{.Path}}" target="_blank" class="gitpullbtn">Edit</a>
 {{end}}
+
+
+{{define "csv"}}
+<p>
+<div style="overflow:auto;max-height:80%;{{.Style}}">
+<table>
+{{range $row := .Headers}}
+    <tr>
+    {{range $cell := $row}}
+        <th>
+            {{$cell}}
+        </th>
+    {{end}}
+    </tr>
+{{end}}
+{{range $row := .Records}}
+    <tr>
+    {{range $cell := $row}}
+        <td>
+            {{$cell}}
+        </td>
+    {{end}}
+    </tr>
+{{end}}
+</table>
+</div>
+</p>
+{{end}}
