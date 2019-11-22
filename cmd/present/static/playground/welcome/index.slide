@@ -42,28 +42,6 @@ This is $formula$
 - item 2
 - item 3
 
-* Multimedia
-
-* Image
-
-# You can use `.image` command to show image
-
-    .image <url> [<height> <width>]?
-
-Support Formats: `PNG`, `BMP`, `JPG`, `GIF`, `SVG`
-
-.image resources/svg.svg 40 40
-
-.image resources/gif.gif
-
-* Video
-
-# You can use `.video` command to show video
-
-    .video <url> <type> [<height> <width>]?
-
-.video resources/mp4.mp4
-
 * Code and Play
 
 * Code and Play
@@ -126,6 +104,52 @@ Or, for script language, you can use shebang flag to specify binary to run the c
 
 .play -edit -numbers code/python-shebang
 
+* Multimedia
+
+* Image
+
+# You can use `.image` command to show image
+
+    .image <url> [<height> <width>]?
+
+Support Formats: `PNG`, `BMP`, `JPG`, `GIF`, `SVG`
+
+.image resources/svg.svg 40 40
+
+.image resources/gif.gif
+
+* Video
+
+# You can use `.video` command to show video
+
+    .video <url> <type> [<height> <width>]?
+
+.video resources/mp4.mp4 video/mp4 400 800
+
+* Formula
+
+# You can use `.latex` command to show complex formula
+# You can define several formulas in one file. Each formula should start with `$$<id>` and end with `$$`
+# If id is not given, the whole file will be treated as a formula
+
+    .latex <url> [<id>]?
+
+[[welcome/resources/latex.latex][Raw File]]
+
+.latex resources/latex.latex abc
+
+* CSV
+
+# You can use `.csv` command to show table from csv file
+# You can specify comma character and comment character.
+# By defautl, comma=',' comment='#'
+
+[[welcome/resources/csv.csv][Raw File]]
+
+    .csv [-style=<css>]? [-comma=<char>]? [-comment=<char>]? <url>
+
+.csv -style=height:450px; resources/csv.csv
+
 * HTML and IFrame
 
 * HTML support
@@ -178,6 +202,3 @@ Or, for script language, you can use shebang flag to specify binary to run the c
 [[welcome/resources/uml.uml][Raw File]]
 
 .uml resources/uml.uml
-
-
-* FAQ
