@@ -511,7 +511,7 @@ func parseSections(ctx *Context, doc *Doc, name string, lines *Lines, number []i
 				go func(ctx *Context, name string, line int, text string, ptr *ElemStub) {
 					elem, err := parser(ctx, name, line, text)
 					if err != nil {
-						ctx.err = fmt.Errorf("Error happens. Line %d: %s.\n\n%s", line, text, err.Error())
+						ctx.err = fmt.Errorf("Error happens.\n\nLine %d: %s\n\n%s", line, text, err.Error())
 					} else {
 						ptr.elem = elem
 					}

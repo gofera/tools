@@ -64,7 +64,7 @@ func playgroundRunHandler(writer http.ResponseWriter, request *http.Request) {
 	}
 	doc, err := ctx.Parse(bytes.NewReader(content), u.Path+"/index.slide", 0)
 	if err != nil {
-		http.Error(writer, err.Error(), http.StatusBadRequest)
+		http.Error(writer, escape(err.Error()), http.StatusBadRequest)
 		return
 	}
 	tmpl := contentTemplate[".slide"]
@@ -72,7 +72,7 @@ func playgroundRunHandler(writer http.ResponseWriter, request *http.Request) {
 	buffer := &bytes.Buffer{}
 	err = doc.Render(buffer, tmpl)
 	if err != nil {
-		http.Error(writer, err.Error(), http.StatusBadRequest)
+		http.Error(writer, escape(err.Error()), http.StatusBadRequest)
 	} else {
 		_, _ = writer.Write(buffer.Bytes())
 	}
