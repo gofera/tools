@@ -54,6 +54,9 @@ func playgroundRunHandler(writer http.ResponseWriter, request *http.Request) {
 			return getContent(&nu)
 		},
 		AbsPath: func(filename string) string {
+			if originUrl, err := url.Parse(filename); err == nil && originUrl.IsAbs() {
+				return filename
+			}
 			abs := &url.URL{
 				Path:   filepath.ToSlash(filepath.Join(resourcePath, filename)),
 				Scheme: u.Scheme,

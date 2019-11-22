@@ -28,7 +28,7 @@ func parseVideo(ctx *Context, fileName string, lineno int, text string) (Elem, e
 	if len(args) < 3 {
 		return nil, errors.New("Wrong video usage. Must like `.video <url> <type>`")
 	}
-	vid := Video{URL: args[1], SourceType: args[2]}
+	vid := Video{URL: ctx.AbsPath(args[1]), SourceType: args[2]}
 	a, err := parseArgs(fileName, lineno, args[3:])
 	if err != nil {
 		return nil, err
