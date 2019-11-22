@@ -317,6 +317,7 @@ func (l *Lines) nextNonEmpty() (text string, ok bool) {
 
 // A Context specifies the supporting context for parsing a presentation.
 type Context struct {
+	AbsPath func(filename string) string
 	// ReadFile reads the file named by filename and returns the contents.
 	ReadFile func(filename string) ([]byte, error)
 	wg       sync.WaitGroup
@@ -410,7 +411,9 @@ func (ctx *Context) Parse(r io.Reader, name string, mode ParseMode) (*Doc, error
 // Parse parses a document from r. Parse reads assets used by the presentation
 // from the file system using ioutil.ReadFile.
 func Parse(r io.Reader, name string, mode ParseMode) (*Doc, error) {
-	ctx := Context{ReadFile: ioutil.ReadFile}
+	ctx := Context{ReadFile: ioutil.ReadFile, AbsPath: func(filename string) string {
+		return filename
+	}}
 	return ctx.Parse(r, name, mode)
 }
 
@@ -508,7 +511,7 @@ func parseSections(ctx *Context, doc *Doc, name string, lines *Lines, number []i
 				go func(ctx *Context, name string, line int, text string, ptr *ElemStub) {
 					elem, err := parser(ctx, name, line, text)
 					if err != nil {
-						ctx.err = err
+						ctx.err = fmt.Errorf("Error happens.\n\nLine %d: %s\n\n%s", line, text, err.Error())
 					} else {
 						ptr.elem = elem
 					}

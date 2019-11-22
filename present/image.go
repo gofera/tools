@@ -23,7 +23,7 @@ func (i Image) TemplateName() string { return "image" }
 
 func parseImage(ctx *Context, fileName string, lineno int, text string) (Elem, error) {
 	args := strings.Fields(text)
-	img := Image{URL: args[1]}
+	img := Image{URL: ctx.AbsPath(args[1])}
 	a, err := parseArgs(fileName, lineno, args[2:])
 	if err != nil {
 		return nil, err

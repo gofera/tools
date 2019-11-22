@@ -54,7 +54,7 @@ func renderLink(href, text string) string {
 	if u, err := url.Parse(href); err != nil {
 		log.Println("renderLink parsing url:", err)
 	} else if !u.IsAbs() || u.Scheme == "javascript" {
-		target = "_self"
+		//target = "_self"
 	}
 
 	return fmt.Sprintf(`<a href="%s" target="%s">%s</a>`, href, target, text)

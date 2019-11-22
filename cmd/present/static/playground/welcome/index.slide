@@ -1,0 +1,204 @@
+# Header block
+Welcome to WebPPT
+Playground for Beginner
+7 Nov 2019
+Tags: Guide
+
+# Empty line to end header part
+# Following is author block(s)
+Wenzhe Liu
+wen-zhe.liu@asml.com
+
+Dean Xu
+dean.xu@asml.com
+XDean@github.com
+
+# There are some options for the page, try comment out them
+.theme asml
+.agenda
+
+# Now you can write your slides
+# Use * to start a new page, and a blank line after it
+* Basic Usage
+
+# A blank page will render to title page. If you enable agenda, it will show as agenda page.
+
+* Basic Usage
+
+This is *bold*font*
+
+This is _italic_font_
+
+This is [[welcome][Link]]
+
+This is `code`
+
+This is $formula$
+
+    formatted
+    lines
+
+- item 1
+- item 2
+- item 3
+
+* Code and Play
+
+* Code and Play
+
+# Use .code command to show code block
+# Use .play command to show runnable code block
+# Add `-edit` flag to enable edit
+# Add `-numbers` flat to show line number
+
+    .code [-edit]? [-numbers]? [-style=<css>]? <file>
+
+.code -edit -numbers code/go.go
+
+.play -edit -numbers code/go.go
+
+Try edit the code and run again.
+You can use `SHIFT+ENTER` to quick run when editing.
+
+* Supported Languages
+
+Now we support
+
+- Go
+- Java
+- Python
+- Lua
+- Perl
+- Bash
+
+To make sure WebPPT can correctly run your code, the code file must have correct extension name.
+Or, for script language, you can use shebang flag to specify binary to run the code.
+
+* Play Code
+
+*Go*
+
+.play -edit -numbers code/go.go
+
+*Java*
+
+.play -edit code/java.java
+
+* Play Code
+
+*Lua*
+
+.play -edit code/lua.lua
+
+*Bash*
+
+.play -edit code/bash.sh
+
+*Python*
+
+.play -edit code/python.py
+
+* Play Code
+
+*Python with shebang*
+
+.play -edit -numbers code/python-shebang
+
+* Multimedia
+
+* Image
+
+# You can use `.image` command to show image
+
+    .image <url> [<height> <width>]?
+
+Support Formats: `PNG`, `BMP`, `JPG`, `GIF`, `SVG`
+
+.image resources/svg.svg 40 40
+
+.image resources/gif.gif
+
+* Video
+
+# You can use `.video` command to show video
+
+    .video <url> <type> [<height> <width>]?
+
+.video resources/mp4.mp4 video/mp4 400 800
+
+* Formula
+
+# You can use `.latex` command to show complex formula
+# You can define several formulas in one file. Each formula should start with `$$<id>` and end with `$$`
+# If id is not given, the whole file will be treated as a formula
+
+    .latex <url> [<id>]?
+
+[[welcome/resources/latex.latex][Raw File]]
+
+.latex resources/latex.latex abc
+
+* CSV
+
+# You can use `.csv` command to show table from csv file
+# You can specify comma character and comment character.
+# By defautl, comma=',' comment='#'
+
+[[welcome/resources/csv.csv][Raw File]]
+
+    .csv [-style=<css>]? [-comma=<char>]? [-comment=<char>]? <url>
+
+.csv -style=height:450px; resources/csv.csv
+
+* HTML and IFrame
+
+* HTML support
+
+# You can use `.html` command to include a html file.
+
+    .html <url>
+
+.html .
+
+.html resources/html.html
+
+* IFrame support
+
+# You can use `.iframe` command to include a whole website.
+
+    .iframe <url> [<height> <width>]?
+
+.iframe / 400 1000
+
+* Chart and Graph
+
+* Echarts
+
+# You can use `.echarts` command to show echart.
+# You need to provide a js script with echart variable `option`
+
+    .echarts <url> [<height> <width>]?
+
+[[welcome/resources/echarts.echarts][Raw File]]
+
+.echarts resources/echarts.echarts 450 900
+
+* Graphviz
+
+# You can use `.graph` command to show graphviz
+
+    .graph <url> [<height> <width>]?
+
+[[welcome/resources/graph.graph][Raw File]]
+
+.graph resources/graph.graph 450 900
+
+* UML
+
+# You can use `.uml` command to show PlantUML
+
+    .uml <url>
+
+[[welcome/resources/uml.uml][Raw File]]
+
+.uml resources/uml.uml

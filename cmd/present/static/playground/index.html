@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+<head>
+    <title>The Go Playground</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="mask.css">
+</head>
+<body>
+<div id="banner">
+    <div id="head" itemprop="name">WebPPT Playground</div>
+    <div id="controls">
+        <input type="button" value="Run" id="run" onclick="submitTryIt()">
+        <input type="url" id="resources-path" name="resources-path" placeholder="Resources URL">
+    </div>
+    <div id="headButtons">
+        <input type="button" value="Help" id="helpButton" onclick="triggerHelp()">
+    </div>
+</div>
+<div id="shield" style="display: none;"></div>
+<a href="javascript:void(0)" id="dragbar"></a>
+<div id="container">
+    <div id="textareacontainer">
+        <div id="textarea">
+            <div id="textareawrapper">
+                <textarea id="textareaCode" wrap="logical" spellcheck="false"></textarea>
+            </div>
+        </div>
+    </div>
+    <div id="iframecontainer">
+        <div id="iframe">
+            <div class="lmask" id="iframemask"></div>
+            <div id="iframewrapper">
+                <iframe id="iframeResult" name="iframeResult"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="helpPane" style="display: none">
+    <div id="helpText">
+        Stub
+    </div>
+    <div id="helpButtons">
+        <input type="button" value="Welcome" id="backToWelcome" onclick="revertWelcomePage()">
+        <input type="button" value="Close" id="help" onclick="triggerHelp()">
+    </div>
+</div>
+<script type="text/javascript" src="drag.js"></script>
+<script type="text/javascript" src="try.js"></script>
+</body>
+</html>

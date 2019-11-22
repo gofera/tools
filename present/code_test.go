@@ -187,7 +187,9 @@ func main() { // HLfunc
 	trimBytes := func(b []byte) string { return strings.TrimSpace(string(b)) }
 
 	for _, tt := range tests {
-		ctx := &Context{tt.readFile}
+		ctx := &Context{ReadFile: tt.readFile, AbsPath: func(filename string) string {
+			return filename
+		}}
 		e, err := parseCode(ctx, tt.sourceFile, 0, tt.cmd)
 		if err != nil {
 			if tt.err == "" {

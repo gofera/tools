@@ -1,0 +1,212 @@
+html {
+    height: 100%;
+}
+
+body {
+    color: black;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+}
+
+a {
+    color: #009;
+}
+
+* {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+/*from go playground*/
+#banner {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 50px;
+    background-color: #E0EBF5;
+}
+
+#head {
+    float: left;
+    padding: 15px 10px;
+
+    font-size: 20px;
+    font-family: sans-serif;
+}
+
+#controls {
+    float: left;
+    padding: 10px 15px;
+    min-width: 245px;
+    width: calc(100% - 400px);
+}
+
+#controls > input {
+    border-radius: 5px;
+}
+
+#headButtons {
+    float: right;
+    padding: 10px 15px;
+}
+
+input[type=button],
+#importsBox {
+    height: 30px;
+    border: 1px solid #375EAB;
+    font-size: 16px;
+    font-family: sans-serif;
+    background: #375EAB;
+    color: white;
+    position: static;
+    top: 1px;
+    border-radius: 5px;
+}
+
+/*From W3C School*/
+#container {
+    background-color: #f1f1f1;
+    width: 100%;
+    overflow: auto;
+    position: absolute;
+    top: 50px;
+    bottom: 0;
+    height: auto;
+}
+
+#textareacontainer {
+    float: left;
+    height: 100%;
+    width: 30%;
+}
+
+#iframecontainer {
+    float: left;
+    height: 100%;
+    width: 70%;
+}
+
+#textarea, #iframe {
+    height: 100%;
+    width: 100%;
+    padding-top: 1px;
+}
+
+#textarea {
+    padding-left: 10px;
+    padding-right: 5px;
+}
+
+#iframe {
+    position: relative;
+    padding-left: 5px;
+    padding-right: 10px;
+}
+
+#textareawrapper {
+    width: 100%;
+    height: 100%;
+    background-color: #ffffff;
+    position: relative;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
+
+#iframewrapper {
+    width: 100%;
+    height: 100%;
+    -webkit-overflow-scrolling: touch;
+    background-color: #ffffff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
+
+#textareaCode {
+    background-color: #ffffff;
+    font-family: consolas, "courier new", monospace;
+    font-size: 15px;
+    height: 100%;
+    width: 100%;
+    padding: 8px;
+    resize: none;
+    border: none;
+    line-height: normal;
+}
+
+#iframeResult {
+    background-color: #ffffff;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+#dragbar {
+    position: absolute;
+    cursor: col-resize;
+    z-index: 3;
+    padding: 5px;
+}
+
+#shield {
+    display: none;
+    top: 0;
+    left: 0;
+    width: 100%;
+    position: absolute;
+    height: 100%;
+    z-index: 4;
+}
+
+#resources-path {
+    max-width: 600px;
+    min-width: 300px;
+    width: calc(70% - 200px);
+    height: 30px;
+    border: 1px solid #375EAB;
+    font-size: 16px;
+    font-family: sans-serif;
+    position: static;
+    top: 1px;
+    border-radius: 5px;
+}
+
+#helpPane {
+    position: fixed;
+    color: #000000;
+    background: #eeeeee;
+    border: 1px solid #000000;
+    top: 50%;
+    left: 50%;
+
+    height: 500px;
+    width: 700px;
+    margin-top: -250px;
+    margin-left: -350px;
+
+    border-radius: 10px;
+    -o-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+}
+
+#helpButtons {
+    text-align: center;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+#helpButtons > input {
+    margin-left: 20px;
+    margin-right: 20px;
+    width: 100px;
+}
+
+#helpText {
+    margin: 20px;
+}

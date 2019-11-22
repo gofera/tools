@@ -77,7 +77,6 @@ func Start() (run func() error, err error) {
 		*urlPrefix = "/" + *urlPrefix
 	}
 	present.UrlPrefix = *urlPrefix
-	InitOnline()
 	if os.Getenv("GAE_ENV") == "standard" {
 		log.Print("Configuring for App Engine Standard")
 		port := os.Getenv("PORT")
@@ -104,6 +103,8 @@ func Start() (run func() error, err error) {
 		*basePath = p.Dir
 	}
 
+	InitOnline()
+	InitPresentPlayground()
 	umlJarPath = filepath.Join(*basePath, "lib/plantuml.jar")
 
 	err = initTemplates(*basePath)
