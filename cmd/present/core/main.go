@@ -5,6 +5,7 @@
 package present_core
 
 import (
+	"crypto/tls"
 	"flag"
 	"fmt"
 	"go/build"
@@ -47,6 +48,12 @@ func initLog() (closer func() error, err error) {
 }
 
 func Start() (run func() error, err error) {
+	http.DefaultClient.Transport = &http.Transport{
+		TLSClientConfig: &tls.Config{
+			InsecureSkipVerify: true,
+		},
+	}
+
 	deferWork := make([]func(), 0)
 	defer func() {
 		if err != nil {
