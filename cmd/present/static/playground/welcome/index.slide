@@ -25,9 +25,11 @@ XDean@github.com
 
 * Basic Usage
 
-*bold font*
+This is *bold*font*
 
-_italic font_
+This is _italic_font_
+
+This is [[welcome][Link]]
 
 This is `code`
 
@@ -40,13 +42,41 @@ This is $formula$
 - item 2
 - item 3
 
-* Run code
+* Multimedia
 
-* Run code
+* Image
 
-# Use play command to show runnable code
+# You can use `.image` command to show image
+
+    .image <url> [<height> <width>]?
+
+Support Formats: `PNG`, `BMP`, `JPG`, `GIF`, `SVG`
+
+.image resources/svg.svg 40 40
+
+.image resources/gif.gif
+
+* Video
+
+# You can use `.video` command to show video
+
+    .video <url> <type> [<height> <width>]?
+
+.video resources/mp4.mp4
+
+* Code and Play
+
+* Code and Play
+
+# Use .code command to show code block
+# Use .play command to show runnable code block
 # Add `-edit` flag to enable edit
 # Add `-numbers` flat to show line number
+
+    .code [-edit]? [-numbers]? [-style=<css>]? <file>
+
+.code -edit -numbers code/go.go
+
 .play -edit -numbers code/go.go
 
 Try edit the code and run again.
@@ -96,22 +126,58 @@ Or, for script language, you can use shebang flag to specify binary to run the c
 
 .play -edit -numbers code/python-shebang
 
-* Advanced Commands
+* HTML and IFrame
 
 * HTML support
 
-You can use `.html` command to include a html file.
+# You can use `.html` command to include a html file.
 
     .html <url>
 
+.html .
+
 .html resources/html.html
 
-* iframe support
+* IFrame support
 
-You can use `.iframe` command to include a whole website.
+# You can use `.iframe` command to include a whole website.
 
     .iframe <url> [<height> <width>]?
 
 .iframe / 400 1000
+
+* Chart and Graph
+
+* Echarts
+
+# You can use `.echarts` command to show echart.
+# You need to provide a js script with echart variable `option`
+
+    .echarts <url> [<height> <width>]?
+
+[[welcome/resources/echarts.echarts][Raw File]]
+
+.echarts resources/echarts.echarts 450 900
+
+* Graphviz
+
+# You can use `.graph` command to show graphviz
+
+    .graph <url> [<height> <width>]?
+
+[[welcome/resources/graph.graph][Raw File]]
+
+.graph resources/graph.graph 450 900
+
+* UML
+
+# You can use `.uml` command to show PlantUML
+
+    .uml <url>
+
+[[welcome/resources/uml.uml][Raw File]]
+
+.uml resources/uml.uml
+
 
 * FAQ

@@ -31,7 +31,7 @@ func playgroundRunHandler(writer http.ResponseWriter, request *http.Request) {
 		http.Error(writer, "The parameter 'path' must be correctly provided", http.StatusBadRequest)
 		return
 	}
-	resourcePath := u.String()
+	resourcePath := u.Path
 
 	content, err := ioutil.ReadAll(request.Body)
 	if err != nil {
@@ -54,7 +54,12 @@ func playgroundRunHandler(writer http.ResponseWriter, request *http.Request) {
 			return getContent(&nu)
 		},
 		AbsPath: func(filename string) string {
-			return filepath.ToSlash(filepath.Join(resourcePath, filename))
+			abs := &url.URL{
+				Path:   filepath.ToSlash(filepath.Join(resourcePath, filename)),
+				Scheme: u.Scheme,
+				Host:   u.Host,
+			}
+			return abs.String()
 		},
 	}
 	doc, err := ctx.Parse(bytes.NewReader(content), u.Path+"/index.slide", 0)
