@@ -1,93 +1,17 @@
 <template>
     <el-header class="header">
         <div class="app-header">
-            <Hamburger class="my-hamburger"></Hamburger>
-            <img class="logo" src="../../assets/logo.png" alt="logo">
-            <div class="header-row">
-                <div v-if="user.ID" class="header-item">
-                    <el-checkbox
-                            v-if="isAdminUser()"
-                            @change="setAsAdmin()"
-                            v-model="checkedAsAdmin">
-                        <span>As Admin </span>
-                    </el-checkbox>
-                    <el-checkbox
-                            v-if="isEditorUser()"
-                            :disabled="checkedAsAdmin"
-                            @change="setAsEditor()"
-                            v-model="checkedAsEditor">
-                        <span>As Editor </span>
-                    </el-checkbox>
-                </div>
-                <div class="header-item">{{user.ID}}</div>
-                <el-button type="danger" round class="header-item" @click="logout">{{loginLabel}}</el-button>
-            </div>
+            <h1 class="title">Web PPT</h1>
         </div>
     </el-header>
 </template>
 
 <script lang="ts">
-    import {Component} from 'vue-property-decorator';
-    import Hamburger from './Hamburger.vue';
-    import * as auth from '@/store/auth';
-    import {Action, Getter} from 'vuex-class';
-    import * as api from '@/api';
-    import {Dictionary} from 'vue-router/types/router';
-    import Base from '@/components/base';
+    import {Vue, Component} from 'vue-property-decorator';
 
-    @Component({
-        components: {
-            Hamburger,
-        },
-    })
-    export default class AppHeader extends Base {
-        protected checkedAsAdmin: boolean = false;
-        protected checkedAsEditor: boolean = false;
-        protected loginLabel: string = '';
-        @Getter(auth.Cmd.GetUser) protected user !: api.User;
-        @Action(auth.Cmd.ClearLoginInfo) private clearLoginInfo!: () => void;
-        @Action(auth.Cmd.SetAsPermission) private setAsPermission!: (p: api.Permission) => void;
+    @Component
+    export default class AppHeader extends Vue {
 
-        public mounted(): void {
-            this.checkedAsAdmin = this.isAdmin();
-            this.checkedAsEditor = this.isEditor();
-            this.loginLabel = this.user.ID !== '' ? 'Logout' : 'Login';
-        }
-
-        protected logout(): void {
-            let query: Dictionary<string>|undefined;
-            if (this.user.ID !== '') {
-                query = {
-                    user: this.user.ID,
-                };
-                this.clearLoginInfo();
-                this.$message({
-                    message: 'Logout success.',
-                    type: 'success',
-                });
-            }
-            this.$router.push({
-                name: 'login',
-                query,
-            });
-        }
-
-        protected isAdminUser(): boolean {
-            return this.user.Permission >= api.Permission.Admin;
-        }
-
-        protected setAsAdmin(): void {
-            this.setAsPermission(this.checkedAsAdmin ? api.Permission.Admin : api.Permission.Editor);
-            this.checkedAsEditor = true;
-        }
-
-        protected isEditorUser(): boolean {
-            return this.user.Permission >= api.Permission.Editor;
-        }
-
-        protected setAsEditor(): void {
-            this.setAsPermission(this.checkedAsEditor ? api.Permission.Editor : api.Permission.Viewer);
-        }
     }
 </script>
 
@@ -134,5 +58,9 @@
             align-items: center;
             flex-flow: row wrap;
         }
+    }
+    .title {
+        width: 100%;
+        text-align: center;
     }
 </style>

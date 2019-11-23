@@ -2,13 +2,10 @@
   <div class="container">
     <AppHeader class="header"></AppHeader>
     <div class="main">
-      <app-sidebar class="sidebar"></app-sidebar>
       <section class="app-main"
-               :class="{sidebarActivate: sidebarLocked}"
+               :class="{sidebarActivate: true}"
                :style="{height: sectionHeight + 'px'}">
-        <transition name="fade" mode="out-in">
           <router-view></router-view>
-        </transition>
       </section>
     </div>
   </div>
@@ -16,20 +13,15 @@
 
 <script lang="ts">
   import {Component, Vue} from 'vue-property-decorator';
-  import {Getter} from 'vuex-class';
   import AppHeader from '../components/header/AppHeader.vue';
-  import AppSidebar from '../components/sidebar/AppSidebar.vue';
-  import {Cmd} from '../store/frame';
 
   @Component({
     components: {
       AppHeader,
-      AppSidebar,
     },
   })
   export default class Home extends Vue {
     protected sectionHeight: number = this.getTableHeight();
-    @Getter(Cmd.SIDEBAR_LOCKED) private sidebarLocked !: boolean;
 
     public mounted() {
       window.onresize = this.resize;
