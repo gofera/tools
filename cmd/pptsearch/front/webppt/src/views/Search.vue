@@ -40,6 +40,21 @@
     protected isLoading: boolean = false;
     protected searchKey: string = '';
     protected nodes: Node[] = [];
+    private urlRoot: string = '';
+
+    public async mounted() {
+      this.isLoading = true;
+      try {
+        this.urlRoot = await api.getWebPPTURL();
+        if (!this.urlRoot.endsWith('/')) {
+          this.urlRoot += '/'
+        }
+      } catch (e) {
+        this.showErrMsg(e, 'get web ppt url');
+      } finally {
+        this.isLoading = false;
+      }
+    }
 
     protected async onSearch() {
       this.isLoading = true;
@@ -50,14 +65,14 @@
           const n: Node = {
             id: Math.random(),
             label: it.Path,
-            url: it.Path,
+            url: this.urlRoot + it.Path,
             children: [],
           };
           for (const line of it.Lines) {
             const child: Node = {
               id: Math.random(),
               label: line.Text,
-              url: `${it.Path}#${line.Section + 1}`,
+              url: `${this.urlRoot + it.Path}#${line.Section + 1}`,
             };
             n.children!.push(child);
           }

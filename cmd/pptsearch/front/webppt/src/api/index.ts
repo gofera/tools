@@ -29,3 +29,7 @@ export function search(keyword: string): Promise<SearchResp[]> {
         },
     });
 }
+
+export function getWebPPTURL(): Promise<string> {
+    return get(`api/webppturl`);
+}
