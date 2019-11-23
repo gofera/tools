@@ -1,4 +1,4 @@
-package present_core
+package main
 
 import (
 	"encoding/json"
@@ -10,10 +10,6 @@ import (
 	"strconv"
 	"strings"
 )
-
-func init() {
-	http.HandleFunc("/api/search", searchHandler)
-}
 
 func searchHandler(writer http.ResponseWriter, request *http.Request) {
 	keyword := request.URL.Query().Get("keyword")
