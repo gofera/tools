@@ -8,10 +8,11 @@ import (
 )
 
 var(
-	port        = flag.String("port", "3998", "port of web ppt search")
+	port        = flag.String("port", "3997", "port of web ppt search")
 	contentPath = flag.String("content", ".", "base path for presentation content")
 	logPath     = flag.String("log", "", "log path, default: stderr")
 	static      = flag.String("static", "", "front static resources")
+	webPptUrl   = flag.String("url", "https://tramweb.asml.com/ppt", "web ppt url root")
 )
 
 func initLog() (closer func() error, err error) {
@@ -43,6 +44,11 @@ func main() {
 		http.Handle("/", http.FileServer(http.Dir(*static)))
 	}
 	http.HandleFunc("/api/search", searchHandler)
+	http.HandleFunc("/api/webppturl", getWebPptUrl)
 
 	http.ListenAndServe(":" + *port, nil)
+}
+
+func getWebPptUrl(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte(*webPptUrl))
 }
