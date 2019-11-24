@@ -292,7 +292,27 @@ func dirList(w io.Writer, name string) (isDir bool, err error) {
 	sort.Sort(d.Slides)
 	sort.Sort(d.Articles)
 	sort.Sort(d.Other)
+
+	if parent, exist := getParentPath(d.Path); exist {
+		parentDir := dirEntry{
+			Name: "..",
+			Path: parent,
+			Title: "parent directory",
+		}
+		d.Dirs = append([]dirEntry{parentDir}, d.Dirs...)
+	}
+
 	return true, dirListTemplate.Execute(w, d)
+}
+
+func getParentPath(p string) (string, bool) {
+	p = strings.TrimRight(p, "/")
+	i := strings.LastIndex(p, "/")
+	if i > 0 {
+		return p[:i], true
+	} else {
+		return p, false
+	}
 }
 
 // showFile reports whether the given file should be displayed in the list.
