@@ -108,6 +108,10 @@ It determines how the formatting actions are rendered.
 </div>
 {{end}}
 
+{{define "home-tool"}}
+<a href="{{.Path}}" target="_blank" class="gitpullbtn">Home</a>
+{{end}}
+
 {{define "gitpull-tool"}}
 <a href="javascript:void(0);" id="git_pull" class="gitpullbtn">Update</a>
 {{end}}

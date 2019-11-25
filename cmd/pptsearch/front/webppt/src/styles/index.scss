@@ -1,0 +1,76 @@
+@import './common.scss';
+
+body {
+  margin: 0;
+  font-family: "Microsoft YaHei";
+  // -moz-osx-font-smoothing: grayscale;
+  // -webkit-font-smoothing: antialiased;
+  // text-rendering: optimizeLegibility;
+  // font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
+}
+
+.filter {
+  background-color: #ffffff;
+  margin-bottom: 10px;
+  border: 1px solid rgb(243, 243, 243);
+  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.12);
+  .filter-row {
+    display: flex;
+    align-items: center;
+    flex-flow: row wrap;
+    margin: 0 10px;
+    .filter-item {
+      margin: 1em;
+      display: flex;
+      align-items: center;
+      flex-flow: row wrap;
+      &:hover {
+        color: $hover_color;
+        div {
+          color: $hover_color;
+        }
+      }
+    }
+    .operate-button {
+      position: absolute;
+      right: 60px;
+    }
+  }
+}
+
+.remove-icon {
+  font-size: 15px;
+  &:hover {
+    color: $remove-icon-hover-color
+  }
+}
+
+.app-main{
+  min-height: 100%
+}
+
+a {
+  cursor: pointer;
+  color: inherit;
+  text-decoration: none;
+  &:hover {
+    color: $hover_color;
+  }
+}
+
+.echarts-container{
+  margin-top: 15px;
+  width: 100%;
+  height: $echarts-container-height;
+  background-color: rgb(253, 253, 253);
+  transition: all 0.5s;
+}
+
+.job-detail-first-column {
+  background: #f5f7fa;
+}
+
+.el-time-panel {
+  left: -30px;
+}
+$asml_blue: rgb(67, 145, 247);

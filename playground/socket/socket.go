@@ -194,6 +194,10 @@ func startProcess(id, body string, dest chan<- *Message, opt *Options) *process 
 			err = p.startJava(body, opt)
 		case ".go":
 			err = p.start(body, opt)
+		case ".c":
+			err = p.startC(body, opt)
+		case ".cpp":
+			err = p.startCpp(body, opt)
 		default:
 			err = p.startScript(body, opt)
 		}
