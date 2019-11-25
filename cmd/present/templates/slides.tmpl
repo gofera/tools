@@ -85,10 +85,14 @@
       </article>
 
     </section>
-    <div id="tools">
+
+    <div id="toolbar">
+        <span id="toolbar-items">
         {{range .Tools}}
         {{elem $.Template .}}
         {{end}}
+        </span>
+        <button id="toolbar-expand">Toggle</button>
     </div>
 
     <div id="help">
