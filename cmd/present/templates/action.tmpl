@@ -96,9 +96,9 @@ It determines how the formatting actions are rendered.
 {{end}}
 
 {{define "agenda-tool"}}
-<div class="dropdown">
-    <div class="dropbtn">Agenda</div>
-    <div class="dropdown-content">
+<div class="agenda">
+    <button class="dropbtn">Agenda</button>
+    <div class="agenda-content">
         <ul>
             <li><a href="javascript:void(0);" onclick="openSlide(0)">Home Page</a></li>
         {{range $index, $s := .Lines}}
@@ -110,15 +110,15 @@ It determines how the formatting actions are rendered.
 {{end}}
 
 {{define "home-tool"}}
-<a href="{{.Path}}" target="_blank" class="gitpullbtn">Home</a>
+<a href="{{.Path}}" target="_blank" class="tool-link">Home</a>
 {{end}}
 
 {{define "gitpull-tool"}}
-<a href="javascript:void(0);" id="git_pull" class="gitpullbtn">Update</a>
+<a href="javascript:void(0);" id="git_pull" class="tool-link">Update</a>
 {{end}}
 
 {{define "edit-tool"}}
-<a href="{{.Path}}" target="_blank" class="gitpullbtn">Edit</a>
+<a href="{{.Path}}" target="_blank" class="tool-link">Edit</a>
 {{end}}
 
 
