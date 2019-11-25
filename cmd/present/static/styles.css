@@ -604,6 +604,7 @@ figcaption {
 
 .dropbtn {
     cursor: default;
+    opacity: 0.4;
 }
 
 .agenda {
@@ -657,6 +658,7 @@ html.wait, html.wait * {
 
 .tool-expand-button {
     position: fixed;
+    opacity: 0.4;
 }
 
 .tool-item {
@@ -666,7 +668,7 @@ html.wait, html.wait * {
 }
 
 .tool-link {
-    opacity: 0.5;
+    opacity: 0.4;
 }
 
 .tool-items{
