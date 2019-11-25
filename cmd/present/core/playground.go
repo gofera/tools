@@ -22,7 +22,7 @@ func playgroundPageHandler(writer http.ResponseWriter, request *http.Request) {
 	if strings.HasPrefix(suffix, "/") {
 		suffix = suffix[1:]
 	}
-	http.ServeFile(writer, request, filepath.Join(*basePath, "static/playground/"+suffix))
+	http.ServeFile(writer, request, filepath.Join(*BasePath, "static/playground/"+suffix))
 }
 
 func playgroundRunHandler(writer http.ResponseWriter, request *http.Request) {

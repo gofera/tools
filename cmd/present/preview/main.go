@@ -6,6 +6,7 @@ import (
 	"github.com/skratchdot/open-golang/open"
 	"github.com/sqweek/dialog"
 	"golang.org/x/tools/cmd/present/core"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 )
@@ -34,8 +35,13 @@ func startPreview() {
 }
 
 func onReady() {
-
-	systray.SetIcon(ICON)
+	icon := filepath.Join(*present_core.BasePath, "static/favicon.ico")
+	iconBytes, err := ioutil.ReadFile(icon)
+	if err != nil {
+		dialog.Message("Fail to find resources")
+		return
+	}
+	systray.SetIcon(iconBytes)
 	systray.SetTitle("WebPPT Previewer")
 	systray.SetTooltip("WebPPT Previewer")
 
