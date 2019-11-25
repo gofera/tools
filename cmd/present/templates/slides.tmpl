@@ -86,13 +86,19 @@
 
     </section>
 
-    <div id="toolbar">
-        <span id="toolbar-items">
+    <div class="toolbar">
+        <button class="tool-expand-button tool-item">
+          <div class="menubar-line"></div>
+          <div class="menubar-line"></div>
+          <div class="menubar-line"></div>
+        </button>
+        <div class="tool-items">
         {{range .Tools}}
-        {{elem $.Template .}}
+        <button class="tool-item">
+            {{elem $.Template .}}
+        </button>
         {{end}}
-        </span>
-        <button id="toolbar-expand">Toggle</button>
+        </div>
     </div>
 
     <div id="help">
