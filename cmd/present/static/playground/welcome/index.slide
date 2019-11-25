@@ -168,7 +168,7 @@ Support Formats: `PNG`, `BMP`, `JPG`, `GIF`, `SVG`
 
     .iframe <url> [<height> <width>]?
 
-.iframe / 400 1000
+.iframe .. 400 1000
 
 * Chart and Graph
 

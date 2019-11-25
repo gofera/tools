@@ -119,7 +119,7 @@ func gitClone(repo, dirPath string) error {
 // dirHandler serves a directory listing for the requested path, rooted at *contentPath.
 func dirHandler(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path == "/favicon.ico" {
-		http.NotFound(w, r)
+		http.ServeFile(w, r, filepath.Join(*BasePath, "static", "favicon.ico"))
 		return
 	}
 	name := filepath.ToSlash(filepath.Join(*contentPath, r.URL.Path))
@@ -295,8 +295,8 @@ func dirList(w io.Writer, name string) (isDir bool, err error) {
 
 	if parent, exist := getParentPath(d.Path); exist {
 		parentDir := dirEntry{
-			Name: "..",
-			Path: parent,
+			Name:  "..",
+			Path:  parent,
 			Title: "parent directory",
 		}
 		d.Dirs = append([]dirEntry{parentDir}, d.Dirs...)
