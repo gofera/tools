@@ -28,7 +28,7 @@ func (p *process) startC(body string, opt *Options) error {
 		return err
 	}
 
-	cmd = p.cmd(dir, "./out")
+	cmd = p.cmd(dir, "./a.out")
 	if err := cmd.Start(); err != nil {
 		return err
 	}
@@ -38,7 +38,7 @@ func (p *process) startC(body string, opt *Options) error {
 
 // TODO: duplicate with startC, need to merge together
 func (p *process) startCpp(body string, opt *Options) error {
-	compDir := filepath.Join(tmpdir, "gcc_"+strconv.Itoa(<-uniq))
+	compDir := filepath.Join(tmpdir, "gpp_"+strconv.Itoa(<-uniq))
 	_ = os.RemoveAll(compDir)
 	err := os.MkdirAll(compDir, os.ModePerm)
 	if err != nil {
@@ -52,13 +52,13 @@ func (p *process) startCpp(body string, opt *Options) error {
 	}
 	p.bin = compDir
 	dir, file := filepath.Split(src)
-	cmd := p.cmd(dir, "gcc", file)
+	cmd := p.cmd(dir, "g++", file)
 	cmd.Stdout = cmd.Stderr
 	if err := cmd.Run(); err != nil {
 		return err
 	}
 
-	cmd = p.cmd(dir, "./out")
+	cmd = p.cmd(dir, "./a.out")
 	if err := cmd.Start(); err != nil {
 		return err
 	}
