@@ -17,3 +17,10 @@ cd cmd/present/preview/package
 go generate main.go
 ls output/
 ```
+
+# Pre-install
+to support cpp, need to install g++:
+```
+# yum install gcc-c++
+```
+
