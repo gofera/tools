@@ -294,6 +294,10 @@ func dirList(w io.Writer, name string) (isDir bool, err error) {
 	sort.Sort(d.Other)
 
 	if parent, exist := getParentPath(d.Path); exist {
+		if *urlPrefix != "" {
+			parent = *urlPrefix + "/" + parent
+			parent = strings.TrimLeft(parent, "/")
+		}
 		parentDir := dirEntry{
 			Name:  "..",
 			Path:  parent,
