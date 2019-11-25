@@ -608,6 +608,14 @@ function updateGraphivs() {
     }
 }
 
+function setupTool() {
+  let toolButton = document.getElementsByClassName("tool-expand-button")[0];
+  let toolItems = document.getElementsByClassName("tool-items")[0];
+  toolButton.addEventListener("click", e => {
+    toolItems.classList.toggle("tool-items-hide")
+  })
+}
+
 function handleDomLoaded() {
   destSlideKey = "destSlide" + window.location.pathname + window.location.search;
   slideEls = document.querySelectorAll('section.slides > article');
@@ -625,6 +633,8 @@ function handleDomLoaded() {
   updateSlides();
 
   setupInteraction();
+
+  setupTool();
 
   if (window.location.hostname == 'localhost' || window.location.hostname == '127.0.0.1' || window.location.hostname == '::1') {
     hideHelpText();

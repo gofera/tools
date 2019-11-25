@@ -85,10 +85,20 @@
       </article>
 
     </section>
-    <div id="tools">
+
+    <div class="toolbar">
+        <button class="tool-expand-button tool-item">
+          <div class="menubar-line"></div>
+          <div class="menubar-line"></div>
+          <div class="menubar-line"></div>
+        </button>
+        <div class="tool-items">
         {{range .Tools}}
-        {{elem $.Template .}}
+        <button class="tool-item">
+            {{elem $.Template .}}
+        </button>
         {{end}}
+        </div>
     </div>
 
     <div id="help">
