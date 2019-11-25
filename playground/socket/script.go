@@ -84,9 +84,24 @@ var scripts = []ScriptRunner{
 	},
 	{
 		Ext: []string{"groovy"},
-                Bin: []string{"groovy"},
-                Run: simpleRun,
-        },
+		Bin: []string{"groovy"},
+		Run: simpleRun,
+	},
+	{
+		Ext: []string{"js"},
+		Bin: []string{"node"},
+		Run: simpleRun,
+	},
+	{
+		Ext: []string{"scala"},
+		Bin: []string{"scala"},
+		Run: simpleRun,
+	},
+	{
+		Ext: []string{"kts"},
+		Bin: []string{"kotlin.sh"},  // kotlin.sh is "kotlinc -script" we need to provide
+		Run: simpleRun,
+	},
 }
 
 func simpleRun(p *process, bin string, args []string, file string) error {
