@@ -606,39 +606,40 @@ figcaption {
     cursor: default;
 }
 
-.dropdown {
+.agenda {
     position: relative;
     display: inline-block;
 }
 
-.dropdown-content {
+.agenda-content {
     display: none;
     position: fixed;
     background-color: #f9f9f9;
     box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+    opacity: 1;
     z-index: 1;
 }
 
-.dropdown-content a {
+.agenda-content a {
     color: black;
     padding: 3px 5px;
     text-decoration: none;
     display: block;
 }
 
-.dropdown-content a:hover {
+.agenda-content a:hover {
     background-color: #e1e1e1;
 }
 
-.dropdown:hover .dropdown-content {
+.agenda:hover .agenda-content {
     display: block;
 }
 
-.dropdown-content ul {
+.agenda-content ul {
     margin-top: 5px;
 }
 
-.dropdown-content ul li {
+.agenda-content ul li {
     margin: 0;
 }
 
@@ -662,6 +663,10 @@ html.wait, html.wait * {
     font-size: 15px;
     padding: 3px;
     display: inline-block;
+}
+
+.tool-link {
+    opacity: 0.5;
 }
 
 .tool-items{
