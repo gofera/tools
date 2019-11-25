@@ -93,7 +93,7 @@ type SearchLine struct {
 func (s *SearchRecord) addLine(line int) {
 	text := s.content[line]
 	section := 0
-	for i := 0; i < line; i++ {
+	for i := 0; i <= line; i++ {
 		if strings.HasPrefix(s.content[i], "* ") {
 			section++
 		}
