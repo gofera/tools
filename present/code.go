@@ -61,6 +61,7 @@ var (
 		".sql":  "sql",
 		".go":   "go",
 		".c":    "c",
+		".cpp":  "cpp",
 		".lua":  "lua",
 	}
 )
