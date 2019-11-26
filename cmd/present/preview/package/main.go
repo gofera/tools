@@ -25,7 +25,7 @@ func main() {
 	presentDir, err := filepath.Abs(os.Args[2])
 	noError(err)
 
-	fmt.Println("To package WebPPT Previewer at: %s", outputDir)
+	fmt.Printf("To package WebPPT Previewer at: %s\n", outputDir)
 	noError(os.MkdirAll(outputDir, 0644))
 
 	fmt.Println("To build binary")
