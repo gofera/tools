@@ -19,6 +19,7 @@ export interface SearchLine {
 
 export interface SearchResp {
     Path: string;
+    Title: string;
     Lines: SearchLine[];
 }
 

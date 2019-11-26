@@ -47,7 +47,7 @@
       try {
         this.urlRoot = await api.getWebPPTURL();
         if (!this.urlRoot.endsWith('/')) {
-          this.urlRoot += '/'
+          this.urlRoot += '/';
         }
       } catch (e) {
         this.showErrMsg(e, 'get web ppt url');
@@ -64,7 +64,7 @@
         for (const it of resp) {
           const n: Node = {
             id: Math.random(),
-            label: it.Path,
+            label: it.Title,
             url: this.urlRoot + it.Path,
             children: [],
           };
