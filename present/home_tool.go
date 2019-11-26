@@ -12,10 +12,6 @@ func (i HomeTool) TemplateName() string {
 	return "home-tool"
 }
 
-func init() {
-	RegisterTool(parseHomeTool)
-}
-
 func parseHomeTool(doc *Doc) (Tool, error) {
 	if !doc.IsBitBucketUserPath() {
 		return nil, nil

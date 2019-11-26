@@ -8,10 +8,6 @@ func (i EditTool) TemplateName() string {
 	return "edit-tool"
 }
 
-func init() {
-	RegisterTool(parseEditTool)
-}
-
 func parseEditTool(doc *Doc) (Tool, error) {
 	if !doc.IsBitBucketUserPath() {
 		return nil, nil
