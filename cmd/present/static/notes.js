@@ -31,7 +31,7 @@ function initNotes() {
   var w = notesWindow;
   var slidesUrl = window.location.href;
 
-  var curSlide = parseInt(localStorage.getItem('destSlide'), 10);
+  var curSlide = parseInt(localStorage.getItem(destSlideKey), 10);
   var formattedNotes = '';
   var section = sections[curSlide - 1];
   // curSlide is 0 when initialized from the first page of slides.
@@ -93,7 +93,7 @@ function updateNotes() {
   // When triggered from parent window, notesWindow is null
   // The storage event listener on notesWindow will update notes
   if (!notesWindow) return;
-  var destSlide = parseInt(localStorage.getItem('destSlide'), 10);
+  var destSlide = parseInt(localStorage.getItem(destSlideKey), 10);
   var section = sections[destSlide - 1];
   var el = notesWindow.document.getElementById('presenter-notes');
 
