@@ -44,7 +44,7 @@ func searchHandler(writer http.ResponseWriter, request *http.Request) {
 			http.Error(writer, "Fail to extract search result line: "+err.Error(), http.StatusInternalServerError)
 			return
 		}
-		line -- // grep line start from 1
+		line-- // grep line start from 1
 		if record, ok := resultMap[path]; ok {
 			record.addLine(line)
 		} else {
@@ -58,10 +58,14 @@ func searchHandler(writer http.ResponseWriter, request *http.Request) {
 				http.Error(writer, "Fail to read file: "+err.Error(), http.StatusInternalServerError)
 				return
 			}
-			content := string(bs)
+			content := strings.Split(string(bs), "\n")
+			if len(content) == 0 {
+				continue
+			}
 			record := SearchRecord{
 				Path:    filepath.ToSlash(relative),
-				content: strings.Split(content, "\n"),
+				Title:   content[0],
+				content: content,
 			}
 			record.addLine(line)
 			result = append(result, &record)
@@ -81,6 +85,7 @@ func searchHandler(writer http.ResponseWriter, request *http.Request) {
 type SearchRecord struct {
 	Path    string
 	Lines   []SearchLine
+	Title   string
 	content []string
 }
 
