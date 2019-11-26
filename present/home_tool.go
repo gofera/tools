@@ -17,6 +17,9 @@ func init() {
 }
 
 func parseHomeTool(doc *Doc) (Tool, error) {
+	if !doc.IsBitBucketUserPath() {
+		return nil, nil
+	}
 	i := strings.LastIndex(doc.Path, "/")
 	if i <= 0 {
 		return nil, nil
