@@ -151,7 +151,11 @@ func Start() (run func() error, err error) {
 	}
 
 	initPlayground(*BasePath, origin)
-	http.Handle("/static/", http.FileServer(http.Dir(*BasePath)))
+	abs, err := filepath.Abs(*BasePath)
+	if err != nil {
+		log.Fatal(err)
+	}
+	http.Handle("/static/", http.FileServer(http.Dir(abs)))
 
 	if !ln.Addr().(*net.TCPAddr).IP.IsLoopback() &&
 		present.PlayEnabled && !*nativeClient && !*usePlayground {
