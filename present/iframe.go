@@ -17,13 +17,14 @@ type Iframe struct {
 	URL    string
 	Width  int
 	Height int
+	Scale  float64  // used in css: transform: scale(1)
 }
 
 func (i Iframe) TemplateName() string { return "iframe" }
 
 func parseIframe(ctx *Context, fileName string, lineno int, text string) (Elem, error) {
 	args := strings.Fields(text)
-	i := Iframe{URL: args[1]}
+	i := Iframe{URL: args[1], Scale: 1}
 	a, err := parseArgs(fileName, lineno, args[2:])
 	if err != nil {
 		return nil, err
@@ -31,6 +32,11 @@ func parseIframe(ctx *Context, fileName string, lineno int, text string) (Elem, 
 	switch len(a) {
 	case 0:
 		// no size parameters
+	case 3:
+		if v, ok := a[2].(int); ok {
+			i.Scale = float64(v) / 100
+		}
+		fallthrough
 	case 2:
 		if v, ok := a[0].(int); ok {
 			i.Height = v

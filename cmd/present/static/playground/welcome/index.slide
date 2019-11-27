@@ -27,6 +27,8 @@ XDean@github.com
 
 This is *bold*font*
 
+This is *style="color:deeppink;font-size:35px"bold*font*with*css* (such as color,size)
+
 This is _italic_font_
 
 This is [[welcome][Link]]
@@ -65,11 +67,13 @@ You can use `SHIFT+ENTER` to quick run when editing.
 Now we support
 
 - Go
-- Java
+- Java/Groovy
+- C/C++
 - Python
 - Lua
 - Perl
 - Bash
+- JavaScript
 
 To make sure WebPPT can correctly run your code, the code file must have correct extension name.
 Or, for script language, you can use shebang flag to specify binary to run the code.
@@ -84,11 +88,25 @@ Or, for script language, you can use shebang flag to specify binary to run the c
 
 .play -edit code/java.java
 
+*JavaScript*
+
+.play -edit code/node.js
+
 * Play Code
+
+*C*
+
+.play -edit -numbers code/c.c
+
+*C++*
+
+.play -edit -numbers code/cpp.cpp
 
 *Lua*
 
 .play -edit code/lua.lua
+
+* Play Code
 
 *Bash*
 
@@ -97,6 +115,16 @@ Or, for script language, you can use shebang flag to specify binary to run the c
 *Python*
 
 .play -edit code/python.py
+
+*Perl*
+
+.play -edit code/perl.pl
+
+*Groovy*
+
+.play -edit -numbers code/dsl.groovy /START/,/STOP/
+
+# we can control what to show by START and STOP (or any other names are allowed) which is defined in the code file.
 
 * Play Code
 
@@ -166,9 +194,11 @@ Support Formats: `PNG`, `BMP`, `JPG`, `GIF`, `SVG`
 
 # You can use `.iframe` command to include a whole website.
 
-    .iframe <url> [<height> <width>]?
+    .iframe <url> [<height> <width> <scale>]?
 
-.iframe .. 400 1000
+# Scale is an optional integer, unit is %, default is 100, means 100% scale.
+
+.iframe .. 600 1000
 
 * Chart and Graph
 
