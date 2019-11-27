@@ -64,7 +64,9 @@ It determines how the formatting actions are rendered.
 {{end}}
 
 {{define "iframe"}}
-<iframe src="{{.URL}}"{{with .Height}} height="{{.}}"{{end}}{{with .Width}} width="{{.}}"{{end}}></iframe>
+<iframe src="{{.URL}}"{{with .Height}} height="{{.}}"{{end}}{{with .Width}} width="{{.}}"{{end}}
+{{with .Scale}} style="transform-origin: 0 0; transform: scale({{.}})"{{end}}
+></iframe>
 {{end}}
 
 {{define "link"}}<p class="link"><a href="{{.URL}}" target="_blank">{{style .Label}}</a></p>{{end}}
