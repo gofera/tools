@@ -42,7 +42,9 @@ It determines how the formatting actions are rendered.
 {{end}}
 
 {{define "graphivz"}}
+<div {{.Style}}>
 <graphivz {{with .Height}} height="{{.}}"{{end}}{{with .Width}} width="{{.}}"{{end}}>{{.Content}}</graphivz>
+</div>
 {{end}}
 
 {{define "uml"}}
