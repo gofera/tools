@@ -3,6 +3,7 @@ package present
 import (
 	"errors"
 	"fmt"
+	"html/template"
 	"path/filepath"
 	"strings"
 )
@@ -15,6 +16,7 @@ type Graphivz struct {
 	Content string
 	Width   int
 	Height  int
+	Style   template.HTMLAttr
 }
 
 func (i Graphivz) TemplateName() string { return "graphivz" }
@@ -39,6 +41,12 @@ func parseGraphivz(ctx *Context, fileName string, lineno int, text string) (elem
 	switch len(a) {
 	case 0:
 		// no size parameters
+	case 3:
+		// TODO: change the param to -style overflow:scroll
+		if v, ok := a[2].(int); ok && v == 1 {  // scroll code is 1
+			result.Style = template.HTMLAttr(fmt.Sprintf(`style="%s"`, "overflow:scroll"))
+		}
+		fallthrough
 	case 2:
 		// If a parameter is empty (underscore) or invalid
 		// leave the field set to zero. The "image" action
