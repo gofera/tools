@@ -2,6 +2,7 @@ package present
 
 import (
 	"errors"
+	"flag"
 	"fmt"
 	"html/template"
 	"path/filepath"
@@ -32,21 +33,35 @@ func parseGraphivz(ctx *Context, fileName string, lineno int, text string) (elem
 		return nil, err
 	}
 
-	a, err := parseArgs(fileName, lineno, args[2:])
+	fs := flag.NewFlagSet("", flag.ExitOnError)
+	style := fs.String("style", "", "CSS Style")
+	scrollable := fs.Bool("scroll", false, "Show scroll bar")
+	err = fs.Parse(args[2:])
+	if err != nil {
+		return
+	}
+	if *style != "" {
+		*style = fmt.Sprintf(`style="%s"`, *style)
+	} else {
+		styles := make([]string, 0, 4)
+		if *scrollable {
+			styles = append(styles, fmt.Sprintf("overflow:scroll"))
+		}
+		if len(styles) > 0 {
+			*style = fmt.Sprintf(`style="%s"`, strings.Join(styles, ";"))
+		}
+	}
+
+	a, err := parseArgs(fileName, lineno, fs.Args())
 
 	result := Graphivz{
 		Content: string(bytes),
+		Style: template.HTMLAttr(*style),
 	}
 
 	switch len(a) {
 	case 0:
 		// no size parameters
-	case 3:
-		// TODO: change the param to -style overflow:scroll
-		if v, ok := a[2].(int); ok && v == 1 {  // scroll code is 1
-			result.Style = template.HTMLAttr(fmt.Sprintf(`style="%s"`, "overflow:scroll"))
-		}
-		fallthrough
 	case 2:
 		// If a parameter is empty (underscore) or invalid
 		// leave the field set to zero. The "image" action
