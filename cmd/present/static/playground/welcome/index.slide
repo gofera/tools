@@ -217,7 +217,10 @@ Support Formats: `PNG`, `BMP`, `JPG`, `GIF`, `SVG`
 
 # You can use `.graph` command to show graphviz
 
-    .graph <url> [<height> <width>]?
+    .graph <url> [-scroll|-style <css>] [<height> <width>]?
+
+# -scroll is to show the scroll bar
+# -style is to set the css style (not contains space)
 
 [[welcome/resources/graph.graph][Raw File]]
 
