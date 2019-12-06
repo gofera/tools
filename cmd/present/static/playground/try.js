@@ -116,6 +116,28 @@ function jumpLeft() {
   }
 }
 
+function jumpRight() {
+  let area = document.getElementById("textareaCode");
+  let targetPos = area.selectionStart;
+  let ifr = document.getElementById("iframeResult");
+  let ifrw = (ifr.contentWindow) ? ifr.contentWindow : (ifr.contentDocument.document) ? ifr.contentDocument.document : ifr.contentDocument;
+  let text = area.value;
+  let lines = text.split("\n");
+
+  let page = 0;
+  let pos = 0;
+  for (let i = 0; i < lines.length; i++) {
+    if (lines[i].startsWith("* ")) {
+      page++
+    }
+    pos += lines[i].length + 1;
+    if (pos > targetPos) {
+      ifrw.openSlide(page);
+      return;
+    }
+  }
+}
+
 function getPage(iframe) {
   var page;
   if (iframe) {
