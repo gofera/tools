@@ -21,6 +21,10 @@
 <a href="javascript:void(0)" id="dragbar"></a>
 <div id="container">
     <div id="textareacontainer">
+        <div id="textarea-toolbar">
+            <input type="button" value="&larr;" id="jumpToLeft" class="textarea-tool" onclick="jumpLeft()">
+            <input type="button" value="&rarr;" id="jumpToRight" class="textarea-tool" onclick="jumpRight()">
+        </div>
         <div id="textarea">
             <div id="textareawrapper">
                 <textarea id="textareaCode" wrap="logical" spellcheck="false"></textarea>

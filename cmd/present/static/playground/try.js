@@ -6,6 +6,35 @@ var welcomeUrl = window.location.href + "welcome";
 
 var helpShown = false;
 
+document.addEventListener('DOMContentLoaded', function () {
+  fetch("welcome/help.html")
+    .then(res => {
+      res.text().then(body => {
+        document.getElementById("helpText").innerHTML = body
+      })
+    });
+
+  let savedURL = window.localStorage.getItem(saveUrlKey);
+  if (savedURL == null || savedURL === "") {
+    savedURL = welcomeUrl;
+  }
+  document.getElementById("resources-path").value = savedURL;
+
+  fetch("welcome/index.slide")
+    .then(res => {
+      res.text().then(body => {
+        welcomePageText = body;
+        let savedText = window.localStorage.getItem(saveTextKey);
+        if (savedText == null || savedText === "") {
+          setToWelcomePage();
+        } else {
+          document.getElementById("textareaCode").value = savedText;
+          submitTryIt();
+        }
+      })
+    })
+}, false);
+
 function submitTryIt() {
 
   let mask = document.getElementById("iframemask");
@@ -14,14 +43,10 @@ function submitTryIt() {
   var text = document.getElementById("textareaCode").value;
   var url = document.getElementById("resources-path").value;
   var oldIframe = document.getElementById("iframeResult");
-  var page;
-  if (oldIframe) {
-    let ifrw = (oldIframe.contentWindow) ? oldIframe.contentWindow : (oldIframe.contentDocument.document) ? oldIframe.contentDocument.document : oldIframe.contentDocument;
-    page = ifrw.curSlide + 1;
-  }
+  var page = getPage(oldIframe);
 
-  window.localStorage.setItem(saveTextKey, text===welcomePageText?"":text);
-  window.localStorage.setItem(saveUrlKey, url===welcomeUrl?"":url);
+  window.localStorage.setItem(saveTextKey, text === welcomePageText ? "" : text);
+  window.localStorage.setItem(saveUrlKey, url === welcomeUrl ? "" : url);
   fetch("run?path=" + url, {
     method: "POST",
     body: text,
@@ -72,31 +97,69 @@ function setToWelcomePage() {
   submitTryIt();
 }
 
-document.addEventListener('DOMContentLoaded', function () {
-  fetch("welcome/help.html")
-    .then(res => {
-      res.text().then(body => {
-        document.getElementById("helpText").innerHTML = body
-      })
-    });
+function jumpLeft() {
+  let area = document.getElementById("textareaCode");
+  let currentPage = getPage(document.getElementById("iframeResult")) || 1;
+  let text = area.value;
+  let lines = text.split("\n");
 
-  let savedURL = window.localStorage.getItem(saveUrlKey);
-  if (savedURL == null || savedURL === "") {
-    savedURL = welcomeUrl;
+  let page = 1; // page 1 is home page
+  for (let i = 0; i < lines.length; i++) {
+    if (lines[i].startsWith("* ")) {
+      page++
+    }
+    if (page === currentPage) {
+      selectTextareaLine(area, i);
+      area.scrollTop = area.scrollHeight / lines.length * i - area.clientHeight / 2;
+      return;
+    }
   }
-  document.getElementById("resources-path").value = savedURL;
+}
 
-  fetch("welcome/index.slide")
-    .then(res => {
-      res.text().then(body => {
-        welcomePageText = body;
-        let savedText = window.localStorage.getItem(saveTextKey);
-        if (savedText == null || savedText === "") {
-          setToWelcomePage();
-        } else {
-          document.getElementById("textareaCode").value = savedText;
-          submitTryIt();
-        }
-      })
-    })
-}, false);
+function getPage(iframe) {
+  var page;
+  if (iframe) {
+    let ifrw = (iframe.contentWindow) ? iframe.contentWindow : (iframe.contentDocument.document) ? iframe.contentDocument.document : iframe.contentDocument;
+    page = ifrw.curSlide + 1;
+  }
+  return page;
+}
+
+function selectTextareaLine(tarea, lineNum) {
+  var lines = tarea.value.split("\n");
+
+  // calculate start/end
+  var startPos = 0, endPos = tarea.value.length;
+  for (var x = 0; x < lines.length; x++) {
+    if (x == lineNum) {
+      break;
+    }
+    startPos += (lines[x].length + 1);
+
+  }
+
+  var endPos = lines[lineNum].length + startPos;
+
+  // do selection
+  // Chrome / Firefox
+  if (typeof (tarea.selectionStart) != "undefined") {
+    tarea.focus();
+    tarea.selectionStart = startPos;
+    tarea.selectionEnd = endPos;
+    return true;
+  }
+
+  // IE
+  if (document.selection && document.selection.createRange) {
+    tarea.focus();
+    tarea.select();
+    var range = document.selection.createRange();
+    range.collapse(true);
+    range.moveEnd("character", endPos);
+    range.moveStart("character", startPos);
+    range.select();
+    return true;
+  }
+
+  return false;
+}

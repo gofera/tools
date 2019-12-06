@@ -54,8 +54,7 @@ a {
     padding: 10px 15px;
 }
 
-input[type=button],
-#importsBox {
+input[type=button] {
     height: 30px;
     border: 1px solid #375EAB;
     font-size: 16px;
@@ -79,6 +78,7 @@ input[type=button],
 }
 
 #textareacontainer {
+    position: relative;
     float: left;
     height: 100%;
     width: 30%;
@@ -210,3 +210,16 @@ input[type=button],
 #helpText {
     margin: 20px;
 }
+
+#textarea-toolbar {
+    float: right;
+    position: absolute;
+    right: 25px;
+    top: 5px;
+    z-index: 1;
+}
+
+#jumpToLeft, #jumpToRight {
+    font-family: cursive;
+}
+
