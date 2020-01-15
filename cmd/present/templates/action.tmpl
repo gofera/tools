@@ -137,6 +137,16 @@ It determines how the formatting actions are rendered.
 <a href="{{.Path}}" target="_blank" class="tool-link">Playground</a>
 {{end}}
 
+{{define "timer-tool"}}
+<span class="tool-link">
+  <input type="text" id="timetext" value="00:00:00" readonly style="text-align:center; width:60px">
+  <button type="button" id="timebtn" onclick="onClickTimerBtn()">Start</button>
+  <script type="text/javascript">
+    var timerTimeOut = {{.TimeoutSecond}};
+  </script>
+</span>
+{{end}}
+
 
 {{define "csv"}}
 <p>

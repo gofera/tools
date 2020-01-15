@@ -91,6 +91,7 @@ type Doc struct {
 	WideScreen bool
 	Agenda     bool
 	Path       string
+	Timeout    *time.Duration  // null for no timeout to show
 }
 
 type Tool interface {
@@ -357,6 +358,16 @@ func (ctx *Context) Parse(r io.Reader, name string, mode ParseMode) (*Doc, error
 		}
 		if strings.HasPrefix(lines.text[i], ".agenda") {
 			doc.Agenda = true
+			lines.text[i] = ""
+		}
+		const timerPrefix = ".timer"
+		if strings.HasPrefix(lines.text[i], timerPrefix) {
+			timeout := strings.TrimSpace(lines.text[i][len(timerPrefix):])
+			if timeout != "" {
+				if d, err := time.ParseDuration(timeout); err == nil {
+					doc.Timeout = &d
+				}
+			}
 			lines.text[i] = ""
 		}
 

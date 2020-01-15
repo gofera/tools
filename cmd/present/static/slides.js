@@ -769,3 +769,74 @@ function getTextNodeAtPosition(root, index) {
     position: c ? index : (lastNode == null ? 0 : lastNode.textContent.length)
   };
 }
+
+// timer related
+var timerHour,timerMinute,timerSecond;
+timerHour=timerMinute=timerSecond=0;
+var timerInt;
+function resetTimer() {
+  timerHour=timerMinute=timerSecond=0;
+  document.getElementById('timetext').value='00:00:00';
+}
+
+function startTimer() {
+  timerInt=setInterval(timer,1000);
+}
+
+function timer() {
+  timerSecond=timerSecond+1;
+  if(timerSecond>=60) {
+    timerSecond=0;
+    timerMinute=timerMinute+1;
+  }
+
+  if(timerMinute>=60) {
+    timerMinute=0;
+    timerHour=timerHour+1;
+  }
+  if (timerHour >= 100) {
+    timerHour = 0;
+  }
+  var text = document.getElementById('timetext');
+  text.value = pad(timerHour)+':'+pad(timerMinute)+':'+pad(timerSecond);
+
+  var total = timerSecond + 60 * (timerMinute + 60 * timerHour);
+  if (total > timerTimeOut) {
+    if (!text.classList.contains('timer-out')) {
+      text.classList.add('timer-out');
+    }
+  } else {
+    if (text.classList.contains('timer-out')) {
+      text.classList.remove('timer-out');
+    }
+  }
+}
+
+function pad(t) {
+  if (t < 10) {
+    return '0' + t;
+  } else {
+    return '' + t;
+  }
+}
+
+function stopTimer() {
+  window.clearInterval(timerInt);
+}
+
+function onClickTimerBtn() {
+  if (timerInt === void 0) {
+    resetTimer();
+    startTimer();
+    document.getElementById('timebtn').innerHTML='Stop';
+  } else {
+    stopTimer();
+    document.getElementById('timebtn').innerHTML='Start';
+    timerInt = void 0;
+  }
+}
+window.onload=function () {
+  if (document.getElementById('timetext')) {
+    onClickTimerBtn();
+  }
+};

@@ -17,6 +17,12 @@ XDean@github.com
 .theme asml
 .agenda
 
+# if .timer exists, a timer will show in the top-left corner
+# Usage: .timer [1h2m34s], 1h2m34s is the timeout means 1 hour 2 minutes and 34 seconds. You can change to other numbers in this format.
+# when timout, the timer will be in red color.
+# if not specify [1h2m34s], the timer will never be in red color.
+.timer 1h2m34s
+
 # Now you can write your slides
 # Use * to start a new page, and a blank line after it
 * Basic Usage
