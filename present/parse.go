@@ -367,6 +367,9 @@ func (ctx *Context) Parse(r io.Reader, name string, mode ParseMode) (*Doc, error
 				if d, err := time.ParseDuration(timeout); err == nil {
 					doc.Timeout = &d
 				}
+			} else {
+				max := 1000 * time.Hour
+				doc.Timeout = &max
 			}
 			lines.text[i] = ""
 		}
