@@ -687,3 +687,7 @@ html.wait, html.wait * {
     background-color: black;
     margin: 2px 0;
 }
+
+.timer-out{
+    color: red;
+}

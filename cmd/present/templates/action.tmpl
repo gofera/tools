@@ -141,6 +141,9 @@ It determines how the formatting actions are rendered.
 <span class="tool-link">
   <input type="text" id="timetext" value="00:00:00" readonly style="text-align:center; width:60px">
   <button type="button" id="timebtn" onclick="onClickTimerBtn()">Start</button>
+  <script type="text/javascript">
+    var timerTimeOut = {{.TimeoutSecond}};
+  </script>
 </span>
 {{end}}
 

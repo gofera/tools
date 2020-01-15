@@ -1,7 +1,7 @@
 package present
 
 type TimerTool struct {
-
+	TimeoutSecond float64
 }
 
 func (i TimerTool) TemplateName() string {
@@ -9,9 +9,11 @@ func (i TimerTool) TemplateName() string {
 }
 
 func parseTimerTool(doc *Doc) (Tool, error) {
-	if !doc.ShowTimer {
+	if doc.Timeout == nil {
 		return nil, nil
 	}
-	tool := TimerTool{}
+	tool := TimerTool{
+		TimeoutSecond: doc.Timeout.Seconds(),
+	}
 	return tool, nil
 }

@@ -797,7 +797,19 @@ function timer() {
   if (timerHour >= 100) {
     timerHour = 0;
   }
-  document.getElementById('timetext').value=pad(timerHour)+':'+pad(timerMinute)+':'+pad(timerSecond);
+  var text = document.getElementById('timetext');
+  text.value = pad(timerHour)+':'+pad(timerMinute)+':'+pad(timerSecond);
+
+  var total = timerSecond + 60 * (timerMinute + 60 * timerHour);
+  if (total > timerTimeOut) {
+    if (!text.classList.contains('timer-out')) {
+      text.classList.add('timer-out');
+    }
+  } else {
+    if (text.classList.contains('timer-out')) {
+      text.classList.remove('timer-out');
+    }
+  }
 }
 
 function pad(t) {
