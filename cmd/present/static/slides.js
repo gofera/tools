@@ -826,7 +826,6 @@ function stopTimer() {
 
 function onClickTimerBtn() {
   if (timerInt === void 0) {
-    resetTimer();
     startTimer();
     document.getElementById('timebtn').innerHTML='Stop';
   } else {
