@@ -17,6 +17,9 @@ XDean@github.com
 .theme asml
 .agenda
 
+# if .timer exists, a timer will show in the top-left corner
+.timer
+
 # Now you can write your slides
 # Use * to start a new page, and a blank line after it
 * Basic Usage

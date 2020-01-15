@@ -91,6 +91,7 @@ type Doc struct {
 	WideScreen bool
 	Agenda     bool
 	Path       string
+	ShowTimer  bool
 }
 
 type Tool interface {
@@ -357,6 +358,10 @@ func (ctx *Context) Parse(r io.Reader, name string, mode ParseMode) (*Doc, error
 		}
 		if strings.HasPrefix(lines.text[i], ".agenda") {
 			doc.Agenda = true
+			lines.text[i] = ""
+		}
+		if strings.HasPrefix(lines.text[i], ".timer") {
+			doc.ShowTimer = true
 			lines.text[i] = ""
 		}
 
