@@ -802,9 +802,7 @@ function timer() {
 
   var total = timerSecond + 60 * (timerMinute + 60 * timerHour);
   if (total > timerTimeOut) {
-    if (!text.classList.contains('timer-out')) {
-      text.classList.add('timer-out');
-    }
+    text.classList.toggle('timer-out');
   } else {
     if (text.classList.contains('timer-out')) {
       text.classList.remove('timer-out');
